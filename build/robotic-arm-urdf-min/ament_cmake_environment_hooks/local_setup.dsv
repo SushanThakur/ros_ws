@@ -1,0 +1,2 @@
+source;share/robotic-arm-urdf-min/environment/ament_prefix_path.sh
+source;share/robotic-arm-urdf-min/environment/path.sh

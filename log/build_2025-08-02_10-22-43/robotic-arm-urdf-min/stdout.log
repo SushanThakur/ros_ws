@@ -1,0 +1,35 @@
+-- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+-- Override CMake install command with custom implementation using symlinks instead of copying resources
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/sushant/ros_ws/build/robotic-arm-urdf-min
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/ament_index/resource_index/package_run_dependencies/robotic-arm-urdf-min
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/ament_index/resource_index/parent_prefix_path/robotic-arm-urdf-min
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/environment/ament_prefix_path.sh
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/environment/ament_prefix_path.dsv
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/environment/path.sh
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/environment/path.dsv
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/local_setup.bash
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/local_setup.sh
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/local_setup.zsh
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/local_setup.dsv
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/package.dsv
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/ament_index/resource_index/packages/robotic-arm-urdf-min
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/cmake/robotic-arm-urdf-minConfig.cmake
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/cmake/robotic-arm-urdf-minConfig-version.cmake
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/package.xml
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/config/joint_names_robotic-arm-urdf-min.yaml
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/launch/display.launch
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/launch/gazebo.launch
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/meshes/base_link.STL
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/meshes/link_1.STL
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/meshes/link_2.STL
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/meshes/link_3.STL
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/meshes/link_4.STL
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/meshes/link_5.STL
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/meshes/link_6.STL
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/meshes/link_7.STL
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/urdf/robotic-arm-urdf-min.csv
+-- Symlinking: /home/sushant/ros_ws/install/robotic-arm-urdf-min/share/robotic-arm-urdf-min/urdf/robotic-arm-urdf-min.urdf
