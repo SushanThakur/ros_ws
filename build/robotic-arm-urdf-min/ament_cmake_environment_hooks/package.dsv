@@ -1,4 +1,0 @@
-source;share/robotic-arm-urdf-min/local_setup.bash
-source;share/robotic-arm-urdf-min/local_setup.dsv
-source;share/robotic-arm-urdf-min/local_setup.sh
-source;share/robotic-arm-urdf-min/local_setup.zsh

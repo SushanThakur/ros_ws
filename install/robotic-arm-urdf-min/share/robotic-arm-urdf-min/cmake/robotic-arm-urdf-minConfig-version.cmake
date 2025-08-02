@@ -1,1 +1,0 @@
-/home/sushant/ros_ws/build/robotic-arm-urdf-min/ament_cmake_core/robotic-arm-urdf-minConfig-version.cmake
