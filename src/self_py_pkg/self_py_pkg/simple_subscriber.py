@@ -14,11 +14,17 @@ class SimpleSubscriber(Node):
 
 
 def main():
-    rclpy.init()
-    simple_subscriber = SimpleSubscriber()
-    rclpy.spin(simple_subscriber)
-    simple_subscriber.destroy_node()
-    rclpy.shutdown()
+
+    try:
+        rclpy.init()
+        simple_subscriber = SimpleSubscriber()
+        rclpy.spin(simple_subscriber)
+    except KeyboardInterrupt:
+        print("Keyboard interrupt reveived. Shutting down...")
+    finally:
+        if rclpy.ok():
+            simple_subscriber.destroy_node()
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':
