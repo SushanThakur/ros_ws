@@ -18,12 +18,21 @@ class SimplePublisher(Node):
         self.pub_.publish(msg)
         self.counter_ += 1
 
+
 def main():
-    rclpy.init()
-    simple_publisher = SimplePublisher()
-    rclpy.spin(simple_publisher)
-    simple_publisher.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.init()
+        simple_publisher = SimplePublisher()
+        rclpy.spin(simple_publisher)
+    except KeyboardInterrupt:
+        # simple_publisher.get_logger().info("Keyboard interrupt received. Shutting down...")
+        # not standard to use print()
+        print("Keyboard interrupt received. Shutting down...")
+    finally:
+        if rclpy.ok():
+            simple_publisher.destroy_node()
+            rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()
