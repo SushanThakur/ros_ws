@@ -1,6 +1,0 @@
-Invoking command in '/home/sushant/ros_ws/build/robotic-arm-urdf-min': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/sushant/ros_ws/src/robotic-arm-urdf-min -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/sushant/ros_ws/install/robotic-arm-urdf-min
-Invoked command in '/home/sushant/ros_ws/build/robotic-arm-urdf-min' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/sushant/ros_ws/src/robotic-arm-urdf-min -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/sushant/ros_ws/install/robotic-arm-urdf-min
-Invoking command in '/home/sushant/ros_ws/build/robotic-arm-urdf-min': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/sushant/ros_ws/build/robotic-arm-urdf-min -- -j8 -l8
-Invoked command in '/home/sushant/ros_ws/build/robotic-arm-urdf-min' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/sushant/ros_ws/build/robotic-arm-urdf-min -- -j8 -l8
-Invoking command in '/home/sushant/ros_ws/build/robotic-arm-urdf-min': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/sushant/ros_ws/build/robotic-arm-urdf-min
-Invoked command in '/home/sushant/ros_ws/build/robotic-arm-urdf-min' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/sushant/ros_ws/build/robotic-arm-urdf-min
