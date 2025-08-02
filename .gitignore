@@ -1,2 +1,37 @@
-*.log
+# === ROS 2 Colcon Workspace Ignore ===
+
+# Build and install artifacts
+build/
+install/
 log/
+
+# ROS 2 launch logs
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# CMake temporary files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# VS Code settings (optional, personal choice)
+.vscode/
+
+# Backup or temp files
+*~
+*.swp
+*.bak
+
+# DS_Store (macOS users)
+.DS_Store
+
+# ROS2-specific config/cache files (optional)
+.colcon/
+test_results/
+
