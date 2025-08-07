@@ -23,6 +23,7 @@ setup(
             'simple_publisher = self_py_pkg.simple_publisher:main',
             'simple_subscriber = self_py_pkg.simple_subscriber:main',
             'simple_parameter = self_py_pkg.simple_parameter:main',
+            'ps4_listener = self_py_pkg.ps4_listener:main',
         ],
     },
 )
