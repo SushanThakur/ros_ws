@@ -44,8 +44,6 @@ bluetoothctl connect "$CONTROLLER_MAC"
 # Load DS4 driver
 # sudo modprobe hid_sony
 sudo modprobe hid_playstation
-sudo modprobe joydev
-sudo udevadm trigger --subsystem-match=input
 sudo udevadm settle
 sudo modprobe joydev
 sudo udevadm trigger --subsystem-match=input
