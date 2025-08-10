@@ -51,8 +51,8 @@ public:
     left_btn  = msg->buttons[13];
     right_btn = msg->buttons[14];
 
-    d_pad_x = up_btn-down_btn;
-    d_pad_y = left_btn-right_btn;
+    d_pad_x = left_btn-right_btn;
+    d_pad_y = up_btn-down_btn;
 
   }
 
