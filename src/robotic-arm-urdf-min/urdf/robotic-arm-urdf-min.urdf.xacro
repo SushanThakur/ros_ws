@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot name="robotic-arm-urdf-min">
+
+  <xacro:macro name="default_transmission" params="number">
+    <transmission>
+
+    </transmission>
+  </xacro:macro>
+
   <link name="base_link">
     <inertial>
       <origin xyz="0 0 0.0075828" rpy="0 0 0" />
