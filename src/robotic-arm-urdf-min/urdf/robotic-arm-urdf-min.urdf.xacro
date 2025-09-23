@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
-     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
-     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot name="robotic-arm-urdf-min">
-  <link name="world" />
-  <joint name="world_to_base" type="fixed">
-    <parent link="world" />
-    <child link="base_link" />
-  </joint>
+
+  <xacro:include filename="$(find robotic-arm-urdf-min)/urdf/robotic-arm-gazebo.xacro" />
+  <xacro:include filename="$(find robotic-arm-urdf-min)/urdf/robotic-arm-control.xacro" />
+
+  <xacro:macro name="default_transmission" params="number">
+    <transmission name="transmission_${number}">
+      <plugin>transmission_interface/SimpleTransmission</plugin>
+      <actuator name="actuator_${number}" role="actuator1" />
+      <joint name="joint_${number}" role="joint1">
+        <mechanical_reduction>1</mechanical_reduction>
+      </joint>
+    </transmission>
+  </xacro:macro>
+
   <link name="base_link">
     <inertial>
       <origin xyz="0 0 0.0075828" rpy="0 0 0" />
@@ -233,4 +239,13 @@
     <axis xyz="0 0 -1" />
     <limit lower="-3.14" upper="3.14" effort="300" velocity="3" />
   </joint>
+
+  <xacro:default_transmission number="1" />
+  <xacro:default_transmission number="2" />
+  <xacro:default_transmission number="3" />
+  <xacro:default_transmission number="4" />
+  <xacro:default_transmission number="5" />
+  <xacro:default_transmission number="6" />
+  <xacro:default_transmission number="7" />
+
 </robot>
