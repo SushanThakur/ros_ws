@@ -24,6 +24,8 @@ setup(
             'simple_subscriber = self_py_pkg.simple_subscriber:main',
             'simple_parameter = self_py_pkg.simple_parameter:main',
             'ps4_listener = self_py_pkg.ps4_listener:main',
+            'simple_service_server = self_py_pkg.simple_service_server:main',
+            'simple_service_client = self_py_pkg.simple_service_client:main',
         ],
     },
 )
