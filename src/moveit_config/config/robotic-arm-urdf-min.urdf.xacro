@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robotic-arm-urdf-min">
+    <xacro:arg name="initial_positions_file" default="initial_positions.yaml" />
+
+    <!-- Import robotic-arm-urdf-min urdf file -->
+    <xacro:include filename="$(find robotic-arm-urdf-min)/urdf/robotic-arm-urdf-min.urdf" />
+
+    <!-- Import control_xacro -->
+    <xacro:include filename="robotic-arm-urdf-min.ros2_control.xacro" />
+
+
+    <xacro:robotic-arm-urdf-min_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
+
+</robot>
