@@ -31,6 +31,8 @@ setup(
             'simple_service_server = self_py_pkg.simple_service_server:main',
             'simple_service_client = self_py_pkg.simple_service_client:main',
             'simple_mover = self_py_pkg.simple_mover:main',
+            'move_test = self_py_pkg.move_test:main',
+            'ps4_mover = self_py_pkg.ps4_mover:main',
         ],
     },
 )
