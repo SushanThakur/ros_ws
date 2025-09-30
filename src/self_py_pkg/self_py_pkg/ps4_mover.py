@@ -24,10 +24,15 @@ class ps4Mover(Node):
 
         self.joints_ = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7']
         self.home_ = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-        self.move_ = [0.0, 0.0, 0.0, -1.57, 0.0, 0.0, 0.0]
+        self.move_ = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         self.move2_ = [3.14, 0.0, 0.0, -1.57, 0.0, 0.0, 0.0]
 
         self.get_logger().info("Ready")
+
+    def ard_map(self, x, in_min, in_max, out_min, out_max):
+        if in_max == in_min:  # Prevent division by zero
+            return out_min
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
     
     def time_callback(self, pos):
         ms = JointState()
@@ -38,19 +43,24 @@ class ps4Mover(Node):
         ms.position = pos
 
         self.joint_pub.publish(ms)
-        # self.get_logger().info("Message Published!! ")
+        self.get_logger().info(f"{self.move_}")
 
     def ps4_callback(self, msg):
         buttons = msg.buttons
+        axes = msg.axes
+        x_axis = axes[2]
 
-        if buttons[0]:
-            self.get_logger().info("X button was pressed")
-            self.time_callback(self.move_)
-        elif buttons[3]: 
-            self.get_logger().info("[] button was pressed")
-            self.time_callback(self.move2_)
-        else:
-            self.time_callback(self.home_)
+        # if buttons[0]:
+        #     self.get_logger().info("X button was pressed")
+        #     self.time_callback(self.move_)
+        # elif buttons[3]: 
+        #     self.get_logger().info("[] button was pressed")
+        #     self.time_callback(self.move2_)
+        # else:
+        #     self.time_callback(self.home_)
+
+        self.move_[0] = self.ard_map(x_axis, -1, 1, 3.14, -3.14)
+        self.time_callback(self.move_)
 
 
 def main(): 
