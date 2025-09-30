@@ -29,7 +29,9 @@ class ps4Mover(Node):
 
         self.get_logger().info("Ready")
 
-    def ard_map(self, x, in_min, in_max, out_min, out_max):
+    def ard_map(self, x, in_min_max, out_min_max):
+        in_min, in_max = in_min_max
+        out_min, out_max = out_min_max
         if in_max == in_min:  # Prevent division by zero
             return out_min
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
@@ -48,7 +50,7 @@ class ps4Mover(Node):
     def ps4_callback(self, msg):
         buttons = msg.buttons
         axes = msg.axes
-        x_axis = axes[2]
+        x_axis = axes[3]
 
         # if buttons[0]:
         #     self.get_logger().info("X button was pressed")
@@ -59,7 +61,7 @@ class ps4Mover(Node):
         # else:
         #     self.time_callback(self.home_)
 
-        self.move_[0] = self.ard_map(x_axis, -1, 1, 3.14, -3.14)
+        self.move_[0] = self.ard_map(x_axis, [-1, 1], [3.14, -3.14])
         self.time_callback(self.move_)
 
 
