@@ -33,6 +33,7 @@ setup(
             'simple_mover = self_py_pkg.simple_mover:main',
             'move_test = self_py_pkg.move_test:main',
             'ps4_mover = self_py_pkg.ps4_mover:main',
+            'move_ps_test = self_py_pkg.move_ps_test:main',
         ],
     },
 )
