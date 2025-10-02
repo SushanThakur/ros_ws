@@ -22,10 +22,33 @@ int main(int argc, char * argv[])
   // Set a target Pose
   auto const target_pose = [] {
     geometry_msgs::msg::Pose msg;
-    msg.orientation.w = 0.01;
-    msg.position.x = 0.01;
-    msg.position.y = 0.01;
-    msg.position.z = 0.01;
+    // msg.orientation.w = -0.35853302478790283;
+    // msg.orientation.x = 0.3583613336086273;
+    // msg.orientation.y = 0.60956871509552;
+    // msg.orientation.z = 0.6094728708267212;
+    // msg.position.x = -0.08079582452774048;
+    // msg.position.y = -0.1770092397928238;
+    // msg.position.z = 0.43801742792129517;
+
+    // Home
+    // msg.orientation.w = -0.000025124352760030888;
+    // msg.orientation.x = -0.0001710644137347117;
+    // msg.orientation.y = 0.7071045637130737;
+    // msg.orientation.z = 0.7071089744567871;
+    // msg.position.x = -0.10730043798685074;
+    // msg.position.y = -0.17701663076877594;
+    // msg.position.z = 0.44518014788627625;
+
+    //test
+    msg.orientation.w = 0.000;
+
+    msg.orientation.x = 0.000;
+    msg.orientation.y = 0.7;
+    msg.orientation.z = 0.7;
+
+    msg.position.x = -0.1;
+    msg.position.y = -0.18;
+    msg.position.z = 0.36;
     return msg;
   }();
   ;
