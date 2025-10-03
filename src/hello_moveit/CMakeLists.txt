@@ -21,7 +21,14 @@ ament_target_dependencies(
   "rclcpp"
 )
 
-install(TARGETS hello_moveit
+add_executable(hello_moveit2 src/hello_moveit2.cpp)
+ament_target_dependencies(
+  hello_moveit2
+  "moveit_ros_planning_interface"
+  "rclcpp"
+)
+
+install(TARGETS hello_moveit hello_moveit2
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)

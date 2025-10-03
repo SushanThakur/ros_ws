@@ -40,15 +40,15 @@ int main(int argc, char * argv[])
     // msg.position.z = 0.44518014788627625;
 
     //test
-    msg.orientation.w = 0.000;
+    msg.orientation.w = -0.00000183;
 
-    msg.orientation.x = 0.000;
-    msg.orientation.y = 0.7;
-    msg.orientation.z = 0.7;
+    msg.orientation.x = -5.5;
+    msg.orientation.y = 1;
+    msg.orientation.z = 0.0;
 
     msg.position.x = -0.1;
-    msg.position.y = -0.18;
-    msg.position.z = 0.36;
+    msg.position.y = 0.00;
+    msg.position.z = 0.53;
     return msg;
   }();
   ;
