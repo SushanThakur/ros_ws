@@ -24,7 +24,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'controller_ps4 = controller_ps4.controller_ps4:main'
+            'controller_ps4 = controller_ps4.controller_ps4:main',
+            'test_controller = controller_ps4.test_controller:main'
         ],
     },
 )

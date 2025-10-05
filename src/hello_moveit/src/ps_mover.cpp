@@ -2,37 +2,116 @@
 #include <rclcpp/rclcpp.hpp>
 #include <moveit/move_group_interface/move_group_interface.hpp>
 #include <geometry_msgs/msg/pose.hpp>
+#include <moveit_msgs/msg/move_it_error_codes.hpp>
 
 using std::placeholders::_1;
 
-class psSub : public rclcpp::Node
+class PsSub : public rclcpp::Node
 {
-  public:
-    psSub()
-    : Node("ps_subscriber")
+public:
+  PsSub() : Node("ps_subscriber")
+  {
+    // Subscribe to /ee_pose topic
+    subscription_ = this->create_subscription<geometry_msgs::msg::Pose>(
+        "/ee_pose", 10, std::bind(&PsSub::topic_callback, this, _1));
+
+    RCLCPP_INFO(this->get_logger(), "Subscribed to /ee_pose");
+
+    // Create a timer to initialize MoveGroupInterface after construction
+    init_timer_ = this->create_wall_timer(
+        std::chrono::milliseconds(100),
+        std::bind(&PsSub::initialize_move_group, this));
+  }
+
+private:
+  void initialize_move_group()
+  {
+    try
     {
-      subscription_ = this->create_subscription<geometry_msgs::msg::Pose>(
-        "/ee_pose", 10, std::bind(&psSub::topic_callback, this, _1)
-      );
+      // Log node namespace for debugging
+      RCLCPP_INFO(this->get_logger(), "Node namespace: %s", this->get_namespace());
+
+      // Initialize MoveGroupInterface
+      move_group_interface_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>(shared_from_this(), "arm");
+      RCLCPP_INFO(this->get_logger(), "MoveGroupInterface initialized for group: arm");
+
+      // Log available MoveIt services for debugging
+      // auto services = this->get_client_names_and_types();
+      // for (const auto& [name, types] : services)
+      // {
+      //   for (const auto& type : types)
+      //   {
+      //     if (type.find("moveit_msgs") != std::string::npos)
+      //     {
+      //       RCLCPP_INFO(this->get_logger(), "Found MoveIt service: %s [%s]", name.c_str(), type.c_str());
+      //     }
+      //   }
+      // }
+
+      // Cancel the timer after successful initialization
+      init_timer_->cancel();
+    }
+    catch (const std::exception& e)
+    {
+      RCLCPP_ERROR(this->get_logger(), "Failed to initialize MoveGroupInterface: %s", e.what());
+    }
+  }
+
+  void topic_callback(const geometry_msgs::msg::Pose::SharedPtr pose)
+  {
+    // Log the received pose
+    RCLCPP_INFO(
+        this->get_logger(),
+        "Pose: position(x=%.3f, y=%.3f, z=%.3f), Orientation(x=%.3f, y=%.3f, z=%.3f, w=%.3f)",
+        pose->position.x, pose->position.y, pose->position.z,
+        pose->orientation.x, pose->orientation.y, pose->orientation.z, pose->orientation.w
+    );
+
+    // Check if MoveGroupInterface is initialized
+    if (!move_group_interface_)
+    {
+      RCLCPP_ERROR(this->get_logger(), "MoveGroupInterface not initialized! Skipping planning.");
+      return;
     }
 
-    private:
-      void topic_callback(const geometry_msgs::msg::Pose & pose) const
+    try
+    {
+      // Set the target pose
+      move_group_interface_->setPoseTarget(*pose);
+      RCLCPP_INFO(this->get_logger(), "Set pose target");
+
+      // Plan
+      moveit::planning_interface::MoveGroupInterface::Plan plan_msg;
+      bool success = (move_group_interface_->plan(plan_msg) == moveit_msgs::msg::MoveItErrorCodes::SUCCESS);
+      RCLCPP_INFO(this->get_logger(), "Planning %s", success ? "succeeded" : "failed");
+
+      if (success)
       {
-        RCLCPP_INFO(this->get_logger(), 
-        "Pose: position(x=%.3f, y=%.3f, z=%.3f), Orientation(w=%.3f)",
-        pose.position.x, pose.position.y, pose.position.z, pose.orientation.w
-        );
+        // Execute the plan
+        move_group_interface_->execute(plan_msg);
+        RCLCPP_INFO(this->get_logger(), "Plan executed successfully");
       }
-      rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr subscription_;
+      else
+      {
+        RCLCPP_ERROR(this->get_logger(), "Planning failed!");
+      }
+    }
+    catch (const std::exception& e)
+    {
+      RCLCPP_ERROR(this->get_logger(), "Exception during planning/execution: %s", e.what());
+    }
+  }
+
+  rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr subscription_;
+  std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_interface_;
+  rclcpp::TimerBase::SharedPtr init_timer_;
 };
 
-int main(int argc, char * argv[])
+int main(int argc, char *argv[])
 {
-
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<psSub>());
+  auto node = std::make_shared<PsSub>();
+  rclcpp::spin(node);
   rclcpp::shutdown();
-
   return 0;
 }

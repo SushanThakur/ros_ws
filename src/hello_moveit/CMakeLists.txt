@@ -7,8 +7,10 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(moveit_ros_planning_interface REQUIRED)
+find_package(moveit_msgs REQUIRED)
 
 add_executable(hello_moveit src/hello_moveit.cpp)
 target_include_directories(hello_moveit PUBLIC
@@ -26,6 +28,9 @@ ament_target_dependencies(
   ps_mover
   "moveit_ros_planning_interface"
   "rclcpp"
+  "geometry_msgs"
+  "moveit_ros_planning_interface"
+  "geometry_msgs"
 )
 
 install(TARGETS hello_moveit ps_mover
