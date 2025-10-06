@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(moveit_config)
+project(armikochan_moveit)
 
 find_package(ament_cmake REQUIRED)
 
