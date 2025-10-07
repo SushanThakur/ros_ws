@@ -32,7 +32,7 @@ private:
       RCLCPP_INFO(this->get_logger(), "Node namespace: %s", this->get_namespace());
 
       // Initialize MoveGroupInterface
-      move_group_interface_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>(shared_from_this(), "arm");
+      move_group_interface_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>(shared_from_this(), "robotic_arm");
       RCLCPP_INFO(this->get_logger(), "MoveGroupInterface initialized for group: arm");
 
       // Log available MoveIt services for debugging

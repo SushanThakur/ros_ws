@@ -18,25 +18,28 @@ def generate_launch_description():
     )
 
     # Set IGN_GAZEBO_RESOURCE_PATH for models
-    env_var_resource = SetEnvironmentVariable("IGN_GAZEBO_RESOURCE_PATH", os.path.join(get_package_prefix("robotic-arm-urdf-min"), "share"))
+    # env_var_resource = SetEnvironmentVariable("IGN_GAZEBO_RESOURCE_PATH", os.path.join(get_package_share_directory("robotic-arm-urdf-min")))
+
+    # env_var_resource = SetEnvironmentVariable("GZ_SIM_RESOURCE_PATH", get_package_share_directory("robotic-arm-urdf-min"))
 
     # Process the Xacro file to generate URDF
-    robot_description = ParameterValue(Command(["xacro ", LaunchConfiguration("model")]), value_type=str)
+    robot_description = Command(["xacro ", LaunchConfiguration("model")])
 
     # Robot state publisher
     robot_state_publisher = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        parameters=[{"robot_description": robot_description, "use_sim_time": True}],
+        parameters=[{"robot_description": ParameterValue(robot_description, value_type=str), "use_sim_time": True}],
         output="screen"
     )
 
     # Start Ignition Gazebo with the updated world file
     world_file = os.path.join(get_package_share_directory("robotic-arm-urdf-min"), "worlds", "empty.sdf")
     start_ign_gazebo = ExecuteProcess(
-        cmd=['ign', 'gazebo', '-r', '-v', '4', world_file],
+        cmd=['gz', 'sim', '-r', '-v', '4', world_file],
         output='screen',
-        name='ign_gazebo'
+        name='ign_gazebo',
+        additional_env={'IGN_GAZEBO_RESOURCE_PATH': os.path.join(get_package_prefix("robotic-arm-urdf-min"), "share")}
     )
 
     # Spawn the robot
@@ -56,7 +59,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        env_var_resource,
+        # env_var_resource,
         model_arg,
         robot_state_publisher,
         start_ign_gazebo,
