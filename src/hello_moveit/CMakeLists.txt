@@ -33,11 +33,27 @@ ament_target_dependencies(
   "geometry_msgs"
 )
 
-install(TARGETS hello_moveit ps_mover
+add_executable(ps_sub src/ps_sub.cpp)
+ament_target_dependencies(
+  ps_sub
+  "moveit_ros_planning_interface"
+  "geometry_msgs"
+)
+
+add_executable(joy_servo src/joy_servo.cpp)
+ament_target_dependencies(
+  joy_servo
+  "moveit_ros_planning_interface"
+  "geometry_msgs"
+  "sensor_msgs"
+)
+
+install(TARGETS hello_moveit ps_mover ps_sub joy_servo
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
+  find_package(geometry_msgs REQUIRED)
   # the following line skips the linter which checks for copyrights
   # comment the line when a copyright and license is added to all source files
   set(ament_cmake_copyright_FOUND TRUE)

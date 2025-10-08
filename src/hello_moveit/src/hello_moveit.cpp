@@ -19,6 +19,9 @@ int main(int argc, char * argv[])
   using moveit::planning_interface::MoveGroupInterface;
   auto move_group_interface = MoveGroupInterface(node, "robotic_arm");
 
+  move_group_interface.setMaxVelocityScalingFactor(1.0);
+  move_group_interface.setMaxAccelerationScalingFactor(1.0);
+
   // Set a target Pose
   auto const target_pose = [] {
     geometry_msgs::msg::Pose msg;

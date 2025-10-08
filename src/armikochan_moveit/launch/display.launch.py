@@ -1,4 +1,5 @@
 import os
+import yaml
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
@@ -7,6 +8,7 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
 from moveit_configs_utils import MoveItConfigsBuilder
+from launch_param_builder import ParameterBuilder
 
 
 def generate_launch_description():
@@ -18,9 +20,19 @@ def generate_launch_description():
         description="RViz configuration file",
     )
 
-    # db_arg = DeclareLaunchArgument(
-    #     "db", default_value="False", description="Database flag"
+    # servo_params = os.path.join(
+    #     get_package_share_directory("armikochan_moveit"),
+    #     "config", "servo.yaml"
     # )
+
+    acceleration_filter_update_period = {"update_period": 0.01}
+    planning_group_name = {"planning_group_name": "robotic_arm"}
+
+    servo_params = {
+        "moveit_servo": ParameterBuilder("armikochan_moveit")
+        .yaml("config/servo_config.yaml")
+        .to_dict()
+    }
 
     ros2_control_hardware_type = DeclareLaunchArgument(
         "ros2_control_hardware_type",
@@ -90,7 +102,9 @@ def generate_launch_description():
         executable="static_transform_publisher",
         name="static_transform_publisher",
         output="log",
-        arguments=["0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "world", "panda_link0"],
+        # arguments=["0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "world", "panda_link0"],
+        arguments=["0", "0", "0", "0", "0", "0", "world", "base_link"],
+
     )
 
     # Publish TF
@@ -140,24 +154,25 @@ def generate_launch_description():
         arguments=["end_effector_controller", "-c", "/controller_manager"],
     )
 
-    # # Warehouse mongodb server
-    # db_config = LaunchConfiguration("db")
-    # mongodb_server_node = Node(
-    #     package="warehouse_ros_mongo",
-    #     executable="mongo_wrapper_ros.py",
-    #     parameters=[
-    #         {"warehouse_port": 33829},
-    #         {"warehouse_host": "localhost"},
-    #         {"warehouse_plugin": "warehouse_ros_mongo::MongoDatabaseConnection"},
-    #     ],
-    #     output="screen",
-    #     condition=IfCondition(db_config),
-    # )
+    servo_node = Node(
+        package="moveit_servo",
+        executable="servo_node",
+        name="servo_node",
+        parameters=[
+            planning_group_name,
+            servo_params,
+            acceleration_filter_update_period,
+            moveit_config.robot_description,
+            moveit_config.robot_description_semantic,
+            moveit_config.robot_description_kinematics,
+            moveit_config.joint_limits,
+        ],
+        output="screen",
+    )
 
     return LaunchDescription(
         [
             rviz_config_arg,
-            # db_arg,
             ros2_control_hardware_type,
             rviz_node,
             static_tf_node,
@@ -167,6 +182,6 @@ def generate_launch_description():
             joint_state_broadcaster_spawner,
             arm_controller_spawner,
             gripper_controller_spawner,
-            # mongodb_server_node,
+            servo_node,
         ]
     )

@@ -32,23 +32,14 @@ private:
       RCLCPP_INFO(this->get_logger(), "Node namespace: %s", this->get_namespace());
 
       // Initialize MoveGroupInterface
-      move_group_interface_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>(shared_from_this(), "robotic_arm");
+      move_group_interface_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>
+      (shared_from_this(), "robotic_arm");
+
+      move_group_interface_ -> setMaxAccelerationScalingFactor(1.0);
+      move_group_interface_ -> setMaxVelocityScalingFactor(1.0);
+      
       RCLCPP_INFO(this->get_logger(), "MoveGroupInterface initialized for group: arm");
 
-      // Log available MoveIt services for debugging
-      // auto services = this->get_client_names_and_types();
-      // for (const auto& [name, types] : services)
-      // {
-      //   for (const auto& type : types)
-      //   {
-      //     if (type.find("moveit_msgs") != std::string::npos)
-      //     {
-      //       RCLCPP_INFO(this->get_logger(), "Found MoveIt service: %s [%s]", name.c_str(), type.c_str());
-      //     }
-      //   }
-      // }
-
-      // Cancel the timer after successful initialization
       init_timer_->cancel();
     }
     catch (const std::exception& e)
