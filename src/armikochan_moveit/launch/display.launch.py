@@ -1,5 +1,5 @@
 import os
-import yaml
+import launch_ros
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
@@ -20,6 +20,10 @@ def generate_launch_description():
         description="RViz configuration file",
     )
 
+    launch_as_standalone_node = LaunchConfiguration(
+        "launch_as_standalone_node", default="false"
+    )
+
     # servo_params = os.path.join(
     #     get_package_share_directory("armikochan_moveit"),
     #     "config", "servo.yaml"
@@ -28,6 +32,9 @@ def generate_launch_description():
     acceleration_filter_update_period = {"update_period": 0.01}
     planning_group_name = {"planning_group_name": "robotic_arm"}
 
+    servo_params_file = PathJoinSubstitution(
+        [FindPackageShare('armikochan_moveit'), 'config', 'servo_config.yaml']
+    )
     servo_params = {
         "moveit_servo": ParameterBuilder("armikochan_moveit")
         .yaml("config/servo_config.yaml")
@@ -154,13 +161,30 @@ def generate_launch_description():
         arguments=["end_effector_controller", "-c", "/controller_manager"],
     )
 
-    servo_node = Node(
+    # servo_node = Node(
+    #     package="moveit_servo",
+    #     executable="servo_node",
+    #     name="servo_node",
+    #     parameters=[
+    #         # servo_params_file,
+    #         servo_params,
+    #         planning_group_name,
+    #         acceleration_filter_update_period,
+    #         moveit_config.robot_description,
+    #         moveit_config.robot_description_semantic,
+    #         moveit_config.robot_description_kinematics,
+    #         moveit_config.joint_limits,
+    #     ],
+    #     output="screen",
+    # )
+
+    servo_node = launch_ros.actions.Node(
         package="moveit_servo",
         executable="servo_node",
         name="servo_node",
         parameters=[
-            planning_group_name,
             servo_params,
+            planning_group_name,
             acceleration_filter_update_period,
             moveit_config.robot_description,
             moveit_config.robot_description_semantic,
@@ -168,6 +192,7 @@ def generate_launch_description():
             moveit_config.joint_limits,
         ],
         output="screen",
+        # condition=IfCondition(launch_as_standalone_node),
     )
 
     return LaunchDescription(

@@ -63,8 +63,9 @@ std::map<Button, double> BUTTON_DEFAULTS;
  * @return return true if you want to publish a Twist, false if you want to publish a JointJog
  */
 bool convertJoyToCmd(const std::vector<float>& axes, const std::vector<int>& buttons,
-                     std::unique_ptr<geometry_msgs::msg::TwistStamped>& twist,
-                     std::unique_ptr<control_msgs::msg::JointJog>& joint)
+                     std::unique_ptr<geometry_msgs::msg::TwistStamped>& twist
+                    //  std::unique_ptr<control_msgs::msg::JointJog>& joint
+                    )
 {
   // The bread and butter: map buttons to twist commands
   /*
@@ -154,7 +155,7 @@ public:
     updateCmdFrame(frame_to_publish_, msg->buttons);
 
     // Convert the joystick message to Twist or JointJog and publish
-    if (convertJoyToCmd(msg->axes, msg->buttons, twist_msg, joint_msg))
+    if (convertJoyToCmd(msg->axes, msg->buttons, twist_msg/*, joint_msg*/))
     {
       // publish the TwistStamped
       twist_msg->header.frame_id = frame_to_publish_;
@@ -165,7 +166,8 @@ public:
     {
       // publish the JointJog
       joint_msg->header.stamp = this->now();
-      joint_msg->header.frame_id = "panda_link3";
+      // joint_msg->header.frame_id = "panda_link3";
+      joint_msg->header.frame_id = "link_3";
       joint_pub_->publish(std::move(joint_msg));
     }
   }
