@@ -1,5 +1,4 @@
 import os
-import launch_ros
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
@@ -25,17 +24,19 @@ def generate_launch_description():
     #     "config", "servo.yaml"
     # )
 
-    acceleration_filter_update_period = {"update_period": 0.01}
-    planning_group_name = {"planning_group_name": "robotic_arm"}
-
     # servo_params = PathJoinSubstitution(
     #     [FindPackageShare('armikochan_moveit'), 'config', 'servo_config.yaml']
     # )
+
     servo_params = {
         "moveit_servo": ParameterBuilder("armikochan_moveit")
         .yaml("config/servo_config.yaml")
         .to_dict()
     }
+
+    acceleration_filter_update_period = {"update_period": 0.01}
+    planning_group_name = {"planning_group_name": "robotic_arm"}
+
 
     ros2_control_hardware_type = DeclareLaunchArgument(
         "ros2_control_hardware_type",
@@ -163,8 +164,8 @@ def generate_launch_description():
         # name="servo_node",
         parameters=[
             servo_params,
-            # planning_group_name,
-            # acceleration_filter_update_period,
+            acceleration_filter_update_period,
+            planning_group_name,
             moveit_config.robot_description,
             moveit_config.robot_description_semantic,
             moveit_config.robot_description_kinematics,
