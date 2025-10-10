@@ -13,6 +13,9 @@
   <depend>rclcpp</depend>
   <depend>control_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>planning_scene_monitor</depend>
+  <depend>moveit_servo</depend>
+  <depend>moveit_core</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

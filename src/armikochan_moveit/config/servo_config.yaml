@@ -2,7 +2,9 @@ use_gazebo: false
 publish_period: 0.01 
 low_latency_mode: false
 auto_start: true
+# use_twist: true
 command_in_type: "unitless"
+# command_in_type: "geometry_msgs/TwistStamped"
 scale:
   linear:  0.4  
   rotational:  0.8  

@@ -28,9 +28,9 @@ def generate_launch_description():
     acceleration_filter_update_period = {"update_period": 0.01}
     planning_group_name = {"planning_group_name": "robotic_arm"}
 
-    servo_params_file = PathJoinSubstitution(
-        [FindPackageShare('armikochan_moveit'), 'config', 'servo_config.yaml']
-    )
+    # servo_params = PathJoinSubstitution(
+    #     [FindPackageShare('armikochan_moveit'), 'config', 'servo_config.yaml']
+    # )
     servo_params = {
         "moveit_servo": ParameterBuilder("armikochan_moveit")
         .yaml("config/servo_config.yaml")
@@ -106,7 +106,7 @@ def generate_launch_description():
         name="static_transform_publisher",
         output="log",
         # arguments=["0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "world", "panda_link0"],
-        arguments=["0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "map", "base_link"],
+        arguments=["0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "world", "base_link"],
 
     )
 
@@ -157,20 +157,21 @@ def generate_launch_description():
         arguments=["end_effector_controller", "-c", "/controller_manager"],
     )
 
-    servo_node = launch_ros.actions.Node(
+    servo_node = Node(
         package="moveit_servo",
         executable="servo_node",
         # name="servo_node",
         parameters=[
             servo_params,
-            planning_group_name,
-            acceleration_filter_update_period,
+            # planning_group_name,
+            # acceleration_filter_update_period,
             moveit_config.robot_description,
             moveit_config.robot_description_semantic,
             moveit_config.robot_description_kinematics,
             moveit_config.joint_limits,
         ],
         output="screen",
+        # arguments=["--ros-args", "--log-level", "debug"],
     )
 
     return LaunchDescription(

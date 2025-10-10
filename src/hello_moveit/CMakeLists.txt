@@ -15,11 +15,15 @@ find_package(moveit_msgs REQUIRED)
 find_package(control_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_srvs REQUIRED)  # Added for Trigger service
+find_package(moveit_servo REQUIRED)
+find_package(moveit_core REQUIRED)
+# find_package(planning_scene_monitor REQUIRED)
 
 # Add the joy_servo component as a shared library
 add_library(joy_servo SHARED
   src/joy_servo.cpp
 )
+
 target_include_directories(joy_servo PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
@@ -65,8 +69,39 @@ ament_target_dependencies(ps_sub
   geometry_msgs
 )
 
+add_executable(servo_test src/servo_test.cpp)
+ament_target_dependencies(servo_test
+  moveit_ros_planning_interface
+  moveit_servo
+  rclcpp
+)
+
+# target_compile_features(servo_test PUBLIC c_std_99 cxx_std_17)
+# ament_target_dependencies(servo_test
+#   moveit_ros_planning_interface
+#   geometry_msgs
+#   sensor_msgs
+#   control_msgs
+#   std_srvs
+#   rclcpp
+#   rclcpp_components
+# )
+
+
+
+add_executable(minimal_servo_twist src/minimal_servo_twist.cpp)
+ament_target_dependencies(minimal_servo_twist
+  rclcpp
+  geometry_msgs
+  moveit_servo
+  moveit_ros_planning
+)
+install(TARGETS minimal_servo_twist DESTINATION lib/${PROJECT_NAME})
+
+
+
 # Install targets
-install(TARGETS hello_moveit ps_mover ps_sub joy_servo
+install(TARGETS hello_moveit ps_mover ps_sub joy_servo servo_test
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
