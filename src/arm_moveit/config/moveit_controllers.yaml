@@ -8,6 +8,7 @@ moveit_simple_controller_manager:
     - gripper_controller
 
   robotic_arm_controller:
+    action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     joints:
       - joint_1
@@ -19,6 +20,7 @@ moveit_simple_controller_manager:
       - joint_7
       - tool_joint
   gripper_controller:
+    action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     joints:
       - grip_left
