@@ -27,13 +27,13 @@ private:
     msg.header.frame_id = "base_link"; // or "link_7" depending on your setup
 
     // Predefined twist values (change as needed)
-    msg.twist.linear.x = 0.1;
+    msg.twist.linear.x = 0.01;
     msg.twist.linear.y = 0.0;
     msg.twist.linear.z = 0.0;
 
     msg.twist.angular.x = 0.0;
     msg.twist.angular.y = 0.0;
-    msg.twist.angular.z = 0.1;
+    msg.twist.angular.z = 0.01;
 
     twist_pub_->publish(msg);
     RCLCPP_INFO_THROTTLE(this->get_logger(), *this->get_clock(), 2000,

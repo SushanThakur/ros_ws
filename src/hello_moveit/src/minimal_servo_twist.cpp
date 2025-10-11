@@ -97,7 +97,7 @@
    std::string command_frame_id_;
  };
   
- KeyboardServo::KeyboardServo() : joint_vel_cmd_(1.0), command_frame_id_{ "panda_link0" }
+ KeyboardServo::KeyboardServo() : joint_vel_cmd_(1.0), command_frame_id_{ "base_link" }
  {
    nh_ = rclcpp::Node::make_shared("servo_keyboard_input");
   
