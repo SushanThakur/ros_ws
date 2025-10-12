@@ -18,16 +18,7 @@ def generate_launch_description():
         default_value="moveit.rviz",
         description="RViz configuration file",
     )
-
-    # servo_params = os.path.join(
-    #     get_package_share_directory("armikochan_moveit"),
-    #     "config", "servo.yaml"
-    # )
-
-    # servo_params = PathJoinSubstitution(
-    #     [FindPackageShare('armikochan_moveit'), 'config', 'servo_config.yaml']
-    # )
-
+    
     servo_params = {
         "moveit_servo": ParameterBuilder("arm_moveit")
         .yaml("config/servo_config.yaml")
@@ -74,11 +65,6 @@ def generate_launch_description():
         arguments=["--ros-args", "--log-level", "info"],
     )
 
-    # RViz
-    rviz_base = LaunchConfiguration("rviz_config")
-    # rviz_config = PathJoinSubstitution(
-    #     [FindPackageShare("armikochan_moveit"), "config", rviz_base]
-    # )
     rviz_config = os.path.join(
         get_package_share_directory("arm_moveit"),
         "config",
@@ -106,7 +92,6 @@ def generate_launch_description():
         executable="static_transform_publisher",
         name="static_transform_publisher",
         output="log",
-        # arguments=["0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "world", "panda_link0"],
         arguments=["0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "world", "base_link"],
 
     )
@@ -161,7 +146,6 @@ def generate_launch_description():
     servo_node = Node(
         package="moveit_servo",
         executable="servo_node",
-        # name="servo_node",
         parameters=[
             servo_params,
             acceleration_filter_update_period,
@@ -174,7 +158,12 @@ def generate_launch_description():
         output="screen",
         # arguments=["--ros-args", "--log-level", "debug"],
     )
-
+    
+    joy_node = Node(
+        package="joy",
+        executable="joy"
+    )
+    
     return LaunchDescription(
         [
             rviz_config_arg,
@@ -189,5 +178,6 @@ def generate_launch_description():
 
             rviz_node,
             servo_node,
+            joy_node,
         ]
     )
