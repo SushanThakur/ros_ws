@@ -51,8 +51,8 @@ class TwistPublisher(Node):
 
 		# Create a generator expression that ignores some indices of the 'axes' and 'buttons' list.
 		# This is done because change in only few buttons on the PS4 needs to publish twist message
-		buttons_check_generator = (a == 0 for i, a in enumerate(buttons) if i not in (4,5))
-		axes_check_generator = (b == 0.0 for i, b in enumerate(axes) if i not in (2, 5))
+		buttons_check_generator = (a == 0 for i, a in enumerate(buttons) if i not in (0,5,7))
+		axes_check_generator = (b == 0.0 for i, b in enumerate(axes) if i not in (2,5))
 
 		all_zero = all(buttons_check_generator) and all(axes_check_generator)
 
@@ -73,19 +73,6 @@ class TwistPublisher(Node):
 			self.twist_pub.publish(req_twist)
 			self.get_logger().info(f"Twist Message Published")
 		
-class PosePublisher(Node):
-	def __init__(self):
-		super().__init__('pose_publisher')
-		self.pose_pub = self.create_publisher(PoseStamped, "servo_node/pose_target_cmds", 10)
-		
-		req_pose = PoseStamped()
-		req_pose.header.stamp = self.get_clock().now().to_msg()
-		req_pose.header.frame_id = FRAME_ID
-		
-		req_pose.pose = default_pose.pose
-		
-		self.pose_pub.publish(req_pose)
-		self.get_logger().info(f"Pose Message Published")
 
 def main():
 	
@@ -93,22 +80,20 @@ def main():
 	
 	switch_cmd = SwitchCmd()
 	twist_publisher = TwistPublisher()
-	pose_publisher = PosePublisher()
 
-	request_cmd = switch_cmd.send_request(2)
+	request_cmd = switch_cmd.send_request(1)
 	rclpy.spin_until_future_complete(switch_cmd, request_cmd)
 	if request_cmd.done() and request_cmd.result is not None:
 		response = request_cmd.result()
 		switch_cmd.get_logger().info(f"Switch to TWIST: Result = {response}")
+		rclpy.spin(twist_publisher)
 	else:
 		switch_cmd.get_logger().error("Failed to switch to TWIST")
 		
-	rclpy.spin(pose_publisher)
 	
 	switch_cmd.destroy_node()
 	twist_publisher.destroy_node()
-	pose_publisher.destroy_node()
-			
 
+			
 if __name__ == "__main__":
 	main()

@@ -161,7 +161,7 @@ def generate_launch_description():
     
     joy_node = Node(
         package="joy",
-        executable="joy"
+        executable="joy_node"
     )
     
     return LaunchDescription(
