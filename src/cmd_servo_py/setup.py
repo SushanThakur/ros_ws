@@ -30,7 +30,8 @@ setup(
             "cmd_servo_py = cmd_servo_py.cmd_servo_py:main",
             "twist_publisher = cmd_servo_py.twist_publisher:main",
             "joint_trajectory_pub = cmd_servo_py.joint_trajectory_pub:main",
-			"gripper_traj_pub = cmd_servo_py.gripper_traj_pub:main"
+			"gripper_traj_pub = cmd_servo_py.gripper_traj_pub:main",
+			"gripper_param = cmd_servo_py.gripper_param:main",
         ],
     },
 )

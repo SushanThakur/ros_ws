@@ -1,6 +1,5 @@
 import rclpy
 from rclpy.executors import MultiThreadedExecutor
-import threading
 from rclpy.node import Node
 from moveit_msgs.srv import ServoCommandType
 from sensor_msgs.msg import Joy
@@ -18,7 +17,6 @@ default_pose.pose.orientation.x = 0.7343
 default_pose.pose.orientation.y = 2.6234
 default_pose.pose.orientation.z = -3.7148
 default_pose.pose.orientation.w = 0.6787
-
 
 class SwitchCmd(Node):
 
@@ -65,10 +63,10 @@ class TwistPublisher(Node):
 			req_twist.twist.angular.x = axes[4]
 			if buttons[4]:
 				req_twist.twist.linear.z = axes[1]
-				req_twist.twist.angular.z = -1 * axes[3]
+				req_twist.twist.angular.y = axes[3]
 			else:
 				req_twist.twist.linear.y = -1 * axes[1]
-				req_twist.twist.angular.y = axes[3]
+				req_twist.twist.angular.z = -1 * axes[3]
 
 			self.twist_pub.publish(req_twist)
 			self.get_logger().info(f"Twist Message Published")
