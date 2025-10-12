@@ -39,7 +39,7 @@
  const std::string JOINT_TOPIC = "/servo_node/delta_joint_cmds";
  const size_t ROS_QUEUE_SIZE = 10;
  const std::string PLANNING_FRAME_ID = "base_link";
- const std::string EE_FRAME_ID = "link_7";
+ const std::string EE_FRAME_ID = "tool_frame";
  }  // namespace
   
  // A class for reading the key inputs from the terminal

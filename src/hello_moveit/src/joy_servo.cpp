@@ -17,7 +17,7 @@
 const std::string JOY_TOPIC = "/joy";
 const std::string TWIST_TOPIC = "/servo_node/delta_twist_cmds";
 const std::string JOINT_TOPIC = "/servo_node/delta_joint_cmds";
-const std::string EEF_FRAME_ID = "link_7"; // panda_hand
+const std::string EEF_FRAME_ID = "tool_frame"; // panda_hand
 const std::string BASE_FRAME_ID = "base_link"; // panda_link0
 
 // Enums for button names -> axis/button array index

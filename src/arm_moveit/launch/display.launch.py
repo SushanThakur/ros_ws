@@ -175,6 +175,11 @@ def generate_launch_description():
         # arguments=["--ros-args", "--log-level", "debug"],
     )
 
+    joy_node = Node(
+        package="joy",
+        executable="joy_node",
+    )
+
     return LaunchDescription(
         [
             rviz_config_arg,
@@ -189,5 +194,6 @@ def generate_launch_description():
 
             rviz_node,
             servo_node,
+            joy_node,
         ]
     )

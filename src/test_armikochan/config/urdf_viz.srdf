@@ -43,6 +43,15 @@
         <joint name="joint_6" value="0.5658"/>
         <joint name="joint_7" value="0"/>
     </group_state>
+    <group_state name="default" group="robotic_arm">
+        <joint name="joint_1" value="0"/>
+        <joint name="joint_2" value="0.4944"/>
+        <joint name="joint_3" value="0"/>
+        <joint name="joint_4" value="1.4434"/>
+        <joint name="joint_5" value="0"/>
+        <joint name="joint_6" value="1.0277"/>
+        <joint name="joint_7" value="0"/>
+    </group_state>
     <group_state name="open" group="gripper">
         <joint name="joint_8" value="0"/>
         <joint name="joint_9" value="0"/>
