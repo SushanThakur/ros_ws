@@ -87,52 +87,73 @@ class PosePublisher(Node):
 		
 		req_pose.pose = default_pose.pose
 		
-		if POSE_PUBLISH:
-			self.pose_pub.publish(req_pose)
-			self.get_logger().info(f"Pose Message Published")
+		self.pose_pub.publish(req_pose)
+		self.get_logger().info(f"Pose Message Published")
 
 def main():
-	rclpy.init()
-	switch_cmd = SwitchCmd()
-	twist_publisher = TwistPublisher()
-	pose_publisher = PosePublisher()
-
-	# # Switch command type to TWIST
-	# request_cmd = switch_cmd.send_request(1)
-	# rclpy.spin_until_future_complete(switch_cmd, request_cmd)
-	# response = request_cmd.result()
-	# switch_cmd.get_logger().info(f"Result = {response}")
-
-
-	# rclpy.spin(twist_publisher)
-	rclpy.spin(pose_publisher)
+	try:
+		rclpy.init()
+		
+		switch_cmd = SwitchCmd()
+		twist_publisher = TwistPublisher()
+		pose_publisher = PosePublisher()
+		
+		executor = MultiThreadedExecutor()
+		executor.add_node(switch_cmd)
+		executor.add_node(twist_publisher)
+		executor.add_node(pose_publisher)
+		
+		executor_thread = threading.Thread(target=executor.spin, daemon=True)
+		executor_thread.start()
+		
+		while True:
+			print("1 = TWIST")
+			print("2 = POSE")
+			print("0 = Exit")
+			print("Enter your choice: ")
+			
+			try:
+				key = int(input())
+			except ValueError:
+				print("Invalid Input. Please enter a number (0, 1, or 2). ")
+				continue
+			
+			if key == 1:
+				request_cmd = switch_cmd.send_request(1)
+				rclpy.spin_until_future_complete(switch_cmd, request_cmd)
+				if request_cmd.done() and request_cmd.result is not None:
+					response = request_cmd.result()
+					switch_cmd.get_logger().info(f"Switch to TWIST: Result = {response}")
+					rclpy.spin(twist_publisher)
+				else:
+					switch_cmd.get_logger().error("Failed to switch to TWIST")
+			elif key == 2:
+				request_cmd = switch_cmd.send_request(2)
+				rclpy.spin_until_future_complete(switch_cmd, request_cmd)
+				if request_cmd.done() and request_cmd.result is not None:
+					response = request_cmd.result()
+					POSE_PUBLISH = True
+					switch_cmd.get_logger().info(f"Switch to POSE: Result = {response}")
+				else:
+					switch_cmd.get_logger().error("Failed to switch to POSE")
+			elif key == 0:
+				print("Exitting Program...")
+				break
+			else: 
+				print("Invalid Input. Please enter a number (0, 1, or 2). ")
 	
-	while (True):
-		print("1=TWIST")
-		print("2=POSE")
-		print("0=EXIT")
-		print("Enter your choice")
-		key = int(input())
-		if key == 1:
-			request_cmd = switch_cmd.send_request(1)
-			rclpy.spin_until_future_complete(switch_cmd, request_cmd)
-			response = request_cmd.result()
-			switch_cmd.get_logger().info(f"Result = {response}")
-		elif key == 2:
-			request_cmd = switch_cmd.send_request(2)
-			rclpy.spin_until_future_complete(switch_cmd, request_cmd)
-			response = request_cmd.result()
-			switch_cmd.get_logger().info(f"Result = {response}")
+	except KeyboardInterrupt:
+		print("Program interrupted by user")
+	except Exception as e:
+		print(f"An error occured: {e}")
+	finally:
+		switch_cmd.destroy_node()
+		twist_publisher.destroy_node()
+		pose_publisher.destroy_node()
+		rclpy.shutdown()
+		executor_thread.join()  # Ensures executor thread terminates
+	
 			
-			POSE_PUBLISH = True
-			
-		elif key == 0:
-			break
-
-	switch_cmd.destroy_node()
-	pose_publisher.destroy_node()
-	twist_publisher.destroy_node()
-	rclpy.shutdown()
 
 if __name__ == "__main__":
 	main()
