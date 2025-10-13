@@ -3,20 +3,11 @@ from rclpy.executors import MultiThreadedExecutor
 from rclpy.node import Node
 from moveit_msgs.srv import ServoCommandType
 from sensor_msgs.msg import Joy
-from geometry_msgs.msg import TwistStamped, PoseStamped
+from geometry_msgs.msg import TwistStamped
 
 FRAME_ID = "base_link"
 
 joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
-# Default Pose for Robotic Arm
-default_pose = PoseStamped()
-default_pose.pose.position.x = 0.08949
-default_pose.pose.position.y = 0.13793
-default_pose.pose.position.z = 0.57731
-default_pose.pose.orientation.x = 0.7343
-default_pose.pose.orientation.y = 2.6234
-default_pose.pose.orientation.z = -3.7148
-default_pose.pose.orientation.w = 0.6787
 
 class SwitchCmd(Node):
 
@@ -91,6 +82,7 @@ def main():
 	
 	switch_cmd.destroy_node()
 	twist_publisher.destroy_node()
+	rclpy.shutdown()
 
 			
 if __name__ == "__main__":

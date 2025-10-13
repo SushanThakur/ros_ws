@@ -8,8 +8,7 @@ from sensor_msgs.msg import Joy
 FRAME_ID = "base_link"
 joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
 
-default_pose = JointTrajectoryPoint()
-default_pose.positions = [0, 0.4944, 0, 1.4434, 0, 1.0277, 0, 0]
+default_pose = [0, 0.4944, 0, 1.4434, 0, 1.0277, 0, 0]
 
 class JointTrajectoryPublisher(Node):
 	
@@ -19,9 +18,6 @@ class JointTrajectoryPublisher(Node):
 		self.joint_traj_pub
 		
 		self.joy_sub = self.create_subscription(Joy, "joy", self.joy_callback, 10)
-		
-		# timer_period = 1.0
-		# self.timer = self.create_timer(timer_period, self.timer_callback)
 		
 	def joy_callback(self, msg):
 		buttons = msg.buttons
@@ -37,7 +33,7 @@ class JointTrajectoryPublisher(Node):
 		joint_traj.joint_names = joints
 		
 		temp_point = JointTrajectoryPoint()
-		temp_point.positions = default_pose.positions
+		temp_point.positions = default_pose
 		temp_point.time_from_start = Duration(sec=1, nanosec=0)
 		
 		joint_traj.points = [temp_point]
