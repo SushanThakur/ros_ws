@@ -32,6 +32,7 @@ setup(
             "joint_trajectory_pub = cmd_servo_py.joint_trajectory_pub:main",
 			"gripper_traj_pub = cmd_servo_py.gripper_traj_pub:main",
 			"cmd_type_switcher = cmd_servo_py.cmd_type_switcher:main",
+			"joint_publisher = cmd_servo_py.joint_publisher:main",
         ],
     },
 )
