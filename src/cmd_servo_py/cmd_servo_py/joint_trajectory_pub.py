@@ -39,7 +39,7 @@ class JointTrajectoryPublisher(Node):
 		joint_traj.points = [temp_point]
 		
 		self.joint_traj_pub.publish(joint_traj)
-		self.get_logger().info("Joint Trajectory Published")
+		self.get_logger().debug("Joint Trajectory Published")
 		
 	
 def main():
