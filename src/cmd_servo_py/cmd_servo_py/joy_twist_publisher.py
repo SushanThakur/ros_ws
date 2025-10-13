@@ -14,7 +14,7 @@ TWIST = 1
 class TwistPublisher(Node):
 
 	def __init__(self):
-		super().__init__('twist_publisher')
+		super().__init__('servo_twist_publisher')
 
 		self.ps_listener_sub = self.create_subscription(Joy, 'joy', self.listener_call, 10)
 		self.ps_listener_sub

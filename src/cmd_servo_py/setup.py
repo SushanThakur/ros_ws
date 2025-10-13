@@ -27,12 +27,11 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            "cmd_servo_py = cmd_servo_py.cmd_servo_py:main",
-            "twist_publisher = cmd_servo_py.twist_publisher:main",
-            "joint_trajectory_pub = cmd_servo_py.joint_trajectory_pub:main",
-			"gripper_traj_pub = cmd_servo_py.gripper_traj_pub:main",
-			"cmd_type_switcher = cmd_servo_py.cmd_type_switcher:main",
-			"joint_publisher = cmd_servo_py.joint_publisher:main",
+			"command_type_switcher = cmd_servo_py.command_type_switcher:main",
+            "joint_trajectory_controller = cmd_servo_py.joint_trajectory_controller:main",
+			"gripper_trajectory_controller = cmd_servo_py.gripper_trajectory_controller:main",
+            "joy_twist_publisher = cmd_servo_py.joy_twist_publisher:main",
+			"joy_joint_publisher = cmd_servo_py.joy_joint_publisher:main",
         ],
     },
 )

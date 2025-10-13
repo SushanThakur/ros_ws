@@ -5,27 +5,27 @@ def generate_launch_description():
 	
 	cmd_type_switcher_node = Node(
 		package="cmd_servo_py",
-		executable="cmd_type_switcher",
+		executable="command_type_switcher",
 	)
 
 	twist_publisher_node = Node(
 		package="cmd_servo_py",
-		executable="twist_publisher",
+		executable="joy_twist_publisher",
 	)
 
 	joint_publisher_node = Node(
 		package="cmd_servo_py",
-		executable="joint_publisher",
+		executable="joy_joint_publisher",
 	)
 	
 	joint_trajectory_pub_node = Node(
 		package="cmd_servo_py",
-		executable="joint_trajectory_pub",
+		executable="joint_trajectory_controller",
 	)
 
 	gripper_traj_pub_node = Node(
 		package="cmd_servo_py",
-		executable="gripper_traj_pub"
+		executable="gripper_trajectory_controller"
 	)
 	
 	return LaunchDescription(
