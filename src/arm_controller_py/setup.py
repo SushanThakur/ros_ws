@@ -2,7 +2,7 @@ import os
 from glob import glob
 from setuptools import find_packages, setup
 
-package_name = 'cmd_servo_py'
+package_name = 'arm_controller_py'
 
 setup(
     name=package_name,
@@ -27,11 +27,11 @@ setup(
     },
     entry_points={
         'console_scripts': [
-			"command_type_switcher = cmd_servo_py.command_type_switcher:main",
-            "joint_trajectory_controller = cmd_servo_py.joint_trajectory_controller:main",
-			"gripper_trajectory_controller = cmd_servo_py.gripper_trajectory_controller:main",
-            "joy_twist_publisher = cmd_servo_py.joy_twist_publisher:main",
-			"joy_joint_publisher = cmd_servo_py.joy_joint_publisher:main",
+			"command_type_switcher = arm_controller_py.command_type_switcher:main",
+            "joint_trajectory_controller = arm_controller_py.joint_trajectory_controller:main",
+			"gripper_trajectory_controller = arm_controller_py.gripper_trajectory_controller:main",
+            "joy_twist_publisher = arm_controller_py.joy_twist_publisher:main",
+			"joy_joint_publisher = arm_controller_py.joy_joint_publisher:main",
         ],
     },
 )

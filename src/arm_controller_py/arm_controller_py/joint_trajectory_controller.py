@@ -13,7 +13,7 @@ default_pose = [0, 0.4944, 0, 1.4434, 0, 1.0277, 0, 0]
 class JointTrajectoryPublisher(Node):
 	
 	def __init__(self):
-		super().__init__('custom_joint_trajectory_publisher')
+		super().__init__('joint_trajectory_controller')
 		self.joint_traj_pub = self.create_publisher(JointTrajectory, "robotic_arm_controller/joint_trajectory", 10)
 		self.joint_traj_pub
 		

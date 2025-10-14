@@ -14,7 +14,7 @@ CLOSE_POS = [-0.04, 0.04]
 
 class JointTrajectoryPublisher(Node):
     def __init__(self):
-        super().__init__('gripper_trajectory_publisher')
+        super().__init__('gripper_trajectory_controller')
         self.joint_traj_pub = self.create_publisher(JointTrajectory, "gripper_controller/joint_trajectory", 10)
         self.joy_sub = self.create_subscription(Joy, "joy", self.joy_callback, 10)
 
