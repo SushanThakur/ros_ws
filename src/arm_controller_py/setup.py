@@ -34,6 +34,7 @@ setup(
 			"joy_joint_publisher = arm_controller_py.joy_joint_publisher:main",
 			"timestamp_remapper = arm_controller_py.timestamp_remapper:main",
 			"joint_state_recorder = arm_controller_py.joint_state_recorder:main",
+			"joint_state_player = arm_controller_py.joint_state_player:main",
         ],
     },
 )

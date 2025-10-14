@@ -27,6 +27,16 @@ def generate_launch_description():
 		package="arm_controller_py",
 		executable="gripper_trajectory_controller"
 	)
+
+	joint_state_recorder_node = Node(
+		package="arm_controller_py",
+		executable="joint_state_recorder"
+	)
+
+	joint_state_player_node = Node(
+		package="arm_controller_py",
+		executable="joint_state_player"
+	)
 	
 	return LaunchDescription(
 		[
@@ -35,5 +45,7 @@ def generate_launch_description():
 			joint_publisher_node,
 			joint_trajectory_pub_node,
 			gripper_traj_pub_node,
+			joint_state_recorder_node,
+			joint_state_player_node,
 		]
 	)

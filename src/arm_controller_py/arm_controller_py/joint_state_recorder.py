@@ -6,6 +6,7 @@ from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import Joy
 from rcl_interfaces.msg import SetParametersResult
+import time
 
 PARAM_NAME = 'current_recording_state'
 RECORDING = 0
@@ -53,13 +54,14 @@ class JointStateRecorder(Node):
 			with open(self.out_file_name, self.file_mode) as out_file:
 				# print(msg)
 				out_file.write(str(msg.position)+'\n')
+				time.sleep(0.01)
 			self.file_mode = 'a'
 
 	def param_change_call(self, params):
 		for param in params:
 			if param.name == PARAM_NAME and param.type_ == Parameter.Type.INTEGER:
 				state = "RECORDING" if param.value else "STOPPED RECORDING"
-				self.get_logger().info(f"Current recording state set to: {state}")
+				self.get_logger().info(f"{state}")
 		return SetParametersResult(successful=True)
 
 def main():
