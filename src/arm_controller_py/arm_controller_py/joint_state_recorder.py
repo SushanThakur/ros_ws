@@ -1,3 +1,4 @@
+import string
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
@@ -15,6 +16,7 @@ class JointStateRecorder(Node):
 
 		self.out_file_name = "ignore/pos.txt"
 		self.last_button_state = 0
+		self.file_mode = 'w'
 
 		self.declare_parameter(PARAM_NAME, RECORDING)
 		self.add_on_set_parameters_callback(self.param_change_call)
@@ -44,11 +46,14 @@ class JointStateRecorder(Node):
 	def toggle_recording_state(self, recording_state):
 		new_state = 1 if not recording_state else 0
 		self.set_parameters([Parameter(PARAM_NAME, Parameter.Type.INTEGER, new_state)])
+		self.file_mode = 'w'
 	
 	def joint_state_call(self, msg):
 		if self.get_parameter(PARAM_NAME).value:
-			with open(self.out_file_name, 'w') as out_file:
-				print(msg)
+			with open(self.out_file_name, self.file_mode) as out_file:
+				# print(msg)
+				out_file.write(str(msg.position)+'\n')
+			self.file_mode = 'a'
 
 	def param_change_call(self, params):
 		for param in params:
