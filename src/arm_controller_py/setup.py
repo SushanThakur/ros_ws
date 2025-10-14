@@ -32,6 +32,8 @@ setup(
 			"gripper_trajectory_controller = arm_controller_py.gripper_trajectory_controller:main",
             "joy_twist_publisher = arm_controller_py.joy_twist_publisher:main",
 			"joy_joint_publisher = arm_controller_py.joy_joint_publisher:main",
+			"timestamp_remapper = arm_controller_py.timestamp_remapper:main",
+			"joint_state_recorder = arm_controller_py.joint_state_recorder:main",
         ],
     },
 )

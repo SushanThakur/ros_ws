@@ -39,7 +39,7 @@ class CmdTypeSwitcher(Node):
 	
 	def joy_call(self, msg):
 		axes = msg.axes
-		if axes[7] == -1 and not self.last_button_state:
+		if axes[7] == -1 and not axes[7] == self.last_button_state:
 			command_type = self.get_parameter('command_type').value
 			self.toggle_cmd_type(command_type)
 		self.last_button_state = axes[7]
