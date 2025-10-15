@@ -26,7 +26,7 @@ class JointTrajectoryPublisher(Node):
         result = SetParametersResult()
         for param in params:
             if param.name == "gripper_state_param" and param.type_ == Parameter.Type.STRING:
-                self.get_logger().info(f"gripper_state_param set to: {param.value}")
+                self.get_logger().debug(f"gripper_state_param set to: {param.value}")
                 result.successful = True
         return result
 

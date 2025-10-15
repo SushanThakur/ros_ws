@@ -7,13 +7,16 @@ from sensor_msgs.msg import Joy
 from rcl_interfaces.msg import SetParametersResult
 from builtin_interfaces.msg import Duration
 import time
+import re
 
 PARAM_NAME = 'current_playing_state'
 PLAYING = 0
 
-frame_id = "base_link"
-# joints = ['gripper_left', 'gripper_right', 'joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
-joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
+robot_frame_id = "base_link"
+gripper_frame_id = "tool_link"
+
+robot_joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
+gripper_joints = ['grip_left', 'grip_right']
 
 class JointStateRecorder(Node):
 	def __init__(self):
@@ -28,6 +31,9 @@ class JointStateRecorder(Node):
 
 		self.joint_traj_pub = self.create_publisher(JointTrajectory, "robotic_arm_controller/joint_trajectory", 10)
 		self.joint_traj_pub
+
+		self.gripper_traj_pub = self.create_publisher(JointTrajectory, "gripper_controller/joint_trajectory", 10)
+		self.gripper_traj_pub
 
 		self.joy_sub = self.create_subscription(
 			Joy,
@@ -55,24 +61,35 @@ class JointStateRecorder(Node):
 			with open(self.in_file_name, self.file_mode) as in_file:
 				count = 0
 				for line in in_file:
-					# trimmed_line = line.strip()[12:-2]
-					trimmed_line = line.strip()[21:-2]
-					list_str = trimmed_line.split(',')
-					list_float = [float(s) for s in list_str]
+
+					lst = list(re.split(r'[\[\],]',line)[2:-1])
+					lst = [float(f) for f in lst]
+
+					joint_pos = lst[2:]
+					gripper_pos = lst[:2]
 
 					joint_traj = JointTrajectory()
-					joint_traj.header.frame_id = frame_id
+					joint_traj.header.frame_id = robot_frame_id
 					joint_traj.header.stamp = self.get_clock().now().to_msg()
-					joint_traj.joint_names = joints
-
+					joint_traj.joint_names = robot_joints
 					temp_point = JointTrajectoryPoint()
-					temp_point.positions = list_float
+					temp_point.positions = joint_pos
 					temp_point.time_from_start = Duration(sec=1, nanosec=0)
-
 					joint_traj.points = [temp_point]
-					count += 1
 					self.joint_traj_pub.publish(joint_traj)
-					time.sleep(0.01)
+					
+					gripper_traj = JointTrajectory()
+					gripper_traj.header.frame_id = gripper_frame_id
+					gripper_traj.header.stamp = self.get_clock().now().to_msg()
+					gripper_traj.joint_names = gripper_joints
+					temp_gripper_point = JointTrajectoryPoint()
+					temp_gripper_point.positions = gripper_pos
+					temp_gripper_point.time_from_start = Duration(sec=1, nanosec=0)
+					gripper_traj.points = [temp_gripper_point]
+					self.gripper_traj_pub.publish(gripper_traj)
+					
+					count += 1
+					time.sleep(0.02)
 
 			self.toggle_playing_state(1)
 			self.get_logger().debug(f"Playback complete. Line Count = {count}")
