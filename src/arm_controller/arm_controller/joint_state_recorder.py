@@ -65,11 +65,17 @@ class JointStateRecorder(Node):
 		return SetParametersResult(successful=True)
 
 def main():
-	rclpy.init()
-	joint_state_recorder = JointStateRecorder()
-	rclpy.spin(joint_state_recorder)
-	joint_state_recorder.destroy_node()
-	rclpy.shutdown()
+	try:
+		rclpy.init()
+		joint_state_recorder = JointStateRecorder()
+		rclpy.spin(joint_state_recorder)
+	except KeyboardInterrupt:
+		# joint_state_recorder.get_logger().info("Destroying Node...")
+		print('\n')
+	finally:
+		if rclpy.ok():
+			joint_state_recorder.destroy_node()
+			rclpy.shutdown()
 
 if __name__=='__main__':
 	main()

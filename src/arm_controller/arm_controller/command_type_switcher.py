@@ -1,4 +1,5 @@
 import rclpy
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.parameter import Parameter
 from moveit_msgs.srv import ServoCommandType
@@ -50,16 +51,18 @@ class CmdTypeSwitcher(Node):
 
 
 def main():
-	rclpy.init()
+	try:
+		rclpy.init()
+		cmd_type_switcher = CmdTypeSwitcher()
+		rclpy.spin(cmd_type_switcher)
+	
+	except KeyboardInterrupt:
+		print()
 
-	cmd_type_switcher = CmdTypeSwitcher()
-	rclpy.spin(cmd_type_switcher)
-
-	cmd_type_switcher.destroy_node()
-	rclpy.shutdown()
+	finally:
+		if rclpy.ok():
+			cmd_type_switcher.destroy_node()
+			rclpy.shutdown()
 
 if __name__ == '__main__':
 	main()
-
-
-

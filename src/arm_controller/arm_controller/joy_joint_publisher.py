@@ -73,11 +73,16 @@ class JointPublisher(Node):
             self.get_logger().debug("JointJog command published")
 
 def main():
-    rclpy.init()
-    node = JointPublisher()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.init()
+        servo_joint_publisher = JointPublisher()
+        rclpy.spin(servo_joint_publisher)
+    except KeyboardInterrupt:
+        print()
+    finally:
+        if rclpy.ok():
+            servo_joint_publisher.destroy_node()
+            rclpy.shutdown()
 
 if __name__ == "__main__":
     main()

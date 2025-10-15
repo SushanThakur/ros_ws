@@ -12,7 +12,7 @@ JOINTS = ['grip_left', 'grip_right']
 OPEN_POS = [0.0, 0.0]
 CLOSE_POS = [-0.04, 0.04]
 
-class JointTrajectoryPublisher(Node):
+class GripperTrajectoryController(Node):
     def __init__(self):
         super().__init__('gripper_trajectory_controller')
         self.joint_traj_pub = self.create_publisher(JointTrajectory, "gripper_controller/joint_trajectory", 10)
@@ -54,11 +54,16 @@ class JointTrajectoryPublisher(Node):
         self.get_logger().info(f"Gripper {new_state}")
 
 def main():
-    rclpy.init()
-    node = JointTrajectoryPublisher()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.init()
+        gripper_trajectory_controller = GripperTrajectoryController()
+        rclpy.spin(gripper_trajectory_controller)
+    except KeyboardInterrupt:
+        print()
+    finally:
+        if rclpy.ok():
+            gripper_trajectory_controller.destroy_node()
+            rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

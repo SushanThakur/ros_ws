@@ -84,14 +84,16 @@ class TwistPublisher(Node):
 		
 
 def main():
-	
-	rclpy.init()
-	
-	twist_publisher = TwistPublisher()
-	rclpy.spin(twist_publisher)
-	twist_publisher.destroy_node()
-
-	rclpy.shutdown()
+	try:
+		rclpy.init()
+		twist_publisher = TwistPublisher()
+		rclpy.spin(twist_publisher)
+	except KeyboardInterrupt:
+		print()
+	finally:
+		if rclpy.ok():
+			twist_publisher.destroy_node()
+			rclpy.shutdown()
 
 			
 if __name__ == "__main__":

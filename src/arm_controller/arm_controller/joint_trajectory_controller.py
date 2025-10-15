@@ -43,13 +43,16 @@ class JointTrajectoryPublisher(Node):
 		
 	
 def main():
-	rclpy.init()
-	joint_trajectory_publisher = JointTrajectoryPublisher()
-	
-	rclpy.spin(joint_trajectory_publisher)
-	
-	joint_trajectory_publisher.destroy_node()
-	rclpy.shutdown()
+	try: 
+		rclpy.init()
+		joint_trajectory_publisher = JointTrajectoryPublisher()		
+		rclpy.spin(joint_trajectory_publisher)
+	except KeyboardInterrupt:
+		print()
+	finally:	
+		if rclpy.ok():
+			joint_trajectory_publisher.destroy_node()
+			rclpy.shutdown()
 
 if __name__ == '__main__':
 	main()
