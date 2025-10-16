@@ -13,10 +13,10 @@ PARAM_NAME = 'current_playing_state'
 PLAYING = 0
 
 robot_frame_id = "base_link"
-gripper_frame_id = "tool_link"
+gripper_frame_id = "link_7"
 
 robot_joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
-gripper_joints = ['grip_left', 'grip_right']
+gripper_joints = ['grip_left_join', 'grip_right_joint']
 
 class JointStateRecorder(Node):
 	def __init__(self):

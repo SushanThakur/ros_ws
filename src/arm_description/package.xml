@@ -6,9 +6,8 @@
     This package contains configuration data, 3D models, and launch files
     for the armikochan robot.
   </description>
-  <maintainer email="mail@sushant.uk">Sushant Thakur</maintainer>
+  <maintainer email="081bel092.sushant@pcampus.edu.np">Sushant Thakur</maintainer>
   <license>BSD</license>
-
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>urdf</exec_depend>
@@ -18,7 +17,6 @@
   <exec_depend>joint_state_publisher_gui</exec_depend>
   <exec_depend>rviz2</exec_depend>
   <exec_depend>ros2launch</exec_depend>
-  <!-- <exec_depend>ros_ign_gazebo</exec_depend> -->
 
   <export>
     <build_type>ament_cmake</build_type>

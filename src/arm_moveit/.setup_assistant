@@ -6,8 +6,8 @@ moveit_setup_assistant_config:
     relative_path: config/arm_description.srdf
   package_settings:
     author_name: Sushant Thakur
-    author_email: mailsushantthakur404@gmail.com
-    generated_timestamp: 1760162254
+    author_email: 081bel092.sushant@pcampus.edu.np
+    generated_timestamp: 1760625144
   control_xacro:
     command:
       - position

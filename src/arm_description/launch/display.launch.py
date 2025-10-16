@@ -19,8 +19,6 @@ def generate_launch_description():
         Command(["xacro ", LaunchConfiguration("model")]),
         value_type=str
         )
-    
-    # robot_description = Command(["xacro ", LaunchConfiguration("model")])
 
     robot_state_publisher = Node(
         package="robot_state_publisher",
@@ -38,7 +36,6 @@ def generate_launch_description():
         executable="rviz2",
         name="rviz2",
         output="screen",
-        # if you want to use custom rviz configuration that you already saved uncomment the line below
         arguments=["-d", os.path.join(get_package_share_directory(
             "arm_description"), "rviz", "rviz.rviz")]
     )

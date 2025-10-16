@@ -1,12 +1,12 @@
 Panels:
   - Class: rviz_common/Displays
-    Help Height: 70
+    Help Height: 138
     Name: Displays
     Property Tree Widget:
       Expanded:
         - /MotionPlanning1
       Splitter Ratio: 0.5
-    Tree Height: 223
+    Tree Height: 264
   - Class: rviz_common/Help
     Name: Help
   - Class: rviz_common/Views
@@ -35,7 +35,7 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
-    - Acceleration_Scaling_Factor: 0.1
+    - Acceleration_Scaling_Factor: 1
       Class: moveit_rviz_plugin/MotionPlanning
       Enabled: true
       Move Group Namespace: ""
@@ -46,7 +46,7 @@ Visualization Manager:
       MoveIt_Planning_Attempts: 10
       MoveIt_Planning_Time: 5
       MoveIt_Use_Cartesian_Path: false
-      MoveIt_Use_Constraint_Aware_IK: false
+      MoveIt_Use_Constraint_Aware_IK: true
       MoveIt_Workspace:
         Center:
           X: 0
@@ -71,12 +71,12 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          grip_left:
+          grip_left_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          grip_right:
+          grip_right_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -116,7 +116,7 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          tool_frame:
+          tool_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -176,12 +176,12 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          grip_left:
+          grip_left_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          grip_right:
+          grip_right_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -221,7 +221,7 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          tool_frame:
+          tool_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -234,7 +234,7 @@ Visualization Manager:
         Show Robot Collision: false
         Show Robot Visual: true
       Value: true
-      Velocity_Scaling_Factor: 0.1
+      Velocity_Scaling_Factor: 1
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -268,15 +268,15 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4500000476837158
+      Pitch: 0.4399993419647217
       Target Frame: world
       Value: Orbit (rviz_default_plugins)
-      Yaw: 5.955191612243652
+      Yaw: 1.217009425163269
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 863
+  Height: 1726
   Help:
     collapsed: false
   Hide Left Dock: false
@@ -285,9 +285,9 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002b400000301fc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004400fffffffb000000100044006900730070006c006100790073010000003f00000165000000cc00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006701000001aa000001960000019600fffffffb0000000800480065006c0070000000029a0000006e0000006f00fffffffb0000000a005600690065007700730000000302000000ae000000a900ffffff000002e60000030100000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000004540000061efc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000007e00fffffffb000000100044006900730070006c0061007900730100000070000002040000018600fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000280000002ca000002ca00fffffffb0000000800480065006c0070000000029a0000006e000000d600fffffffb0000000a005600690065007700730100000556000001380000013800ffffff000006e00000061e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 1440
-  X: 1536
+  Width: 2880
+  X: 3072
   Y: 0

@@ -1,8 +1,8 @@
 # Default initial positions for arm_description's ros2_control fake system
 
 initial_positions:
-  grip_left: 0
-  grip_right: 0
+  grip_left_join: 0
+  grip_right_joint: 0
   joint_1: 0
   joint_2: 0
   joint_3: 0

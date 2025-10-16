@@ -35,8 +35,8 @@ robotic_arm_controller:
 gripper_controller:
   ros__parameters:
     joints:
-      - grip_left
-      - grip_right
+      - grip_left_join
+      - grip_right_joint
     command_interfaces:
       - position
       - velocity

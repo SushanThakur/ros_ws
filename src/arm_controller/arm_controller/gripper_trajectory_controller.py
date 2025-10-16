@@ -7,7 +7,7 @@ from rcl_interfaces.msg import SetParametersResult
 from rclpy.parameter import Parameter
 
 FRAME_ID = "tool_link"
-JOINTS = ['grip_left', 'grip_right']
+JOINTS = ['grip_left_join', 'grip_right_joint']
 
 OPEN_POS = [0.0, 0.0]
 CLOSE_POS = [-0.04, 0.04]
