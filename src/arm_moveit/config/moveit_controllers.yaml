@@ -23,5 +23,5 @@ moveit_simple_controller_manager:
         action_ns: follow_joint_trajectory
         type: FollowJointTrajectory
         joints:
-            - grip_left_join
+            - grip_left_joint
             - grip_right_joint

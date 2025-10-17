@@ -48,7 +48,7 @@ def main():
 		joint_trajectory_publisher = JointTrajectoryPublisher()		
 		rclpy.spin(joint_trajectory_publisher)
 	except KeyboardInterrupt:
-		print()
+		pass
 	finally:	
 		if rclpy.ok():
 			joint_trajectory_publisher.destroy_node()

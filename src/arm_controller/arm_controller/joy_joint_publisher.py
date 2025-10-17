@@ -78,7 +78,7 @@ def main():
         servo_joint_publisher = JointPublisher()
         rclpy.spin(servo_joint_publisher)
     except KeyboardInterrupt:
-        print()
+        pass
     finally:
         if rclpy.ok():
             servo_joint_publisher.destroy_node()

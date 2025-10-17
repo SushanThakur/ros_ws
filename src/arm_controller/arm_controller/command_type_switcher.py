@@ -57,7 +57,7 @@ def main():
 		rclpy.spin(cmd_type_switcher)
 	
 	except KeyboardInterrupt:
-		print()
+		pass
 
 	finally:
 		if rclpy.ok():

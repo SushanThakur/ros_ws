@@ -89,7 +89,7 @@ def main():
 		twist_publisher = TwistPublisher()
 		rclpy.spin(twist_publisher)
 	except KeyboardInterrupt:
-		print()
+		pass
 	finally:
 		if rclpy.ok():
 			twist_publisher.destroy_node()

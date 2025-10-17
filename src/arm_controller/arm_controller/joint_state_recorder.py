@@ -70,8 +70,7 @@ def main():
 		joint_state_recorder = JointStateRecorder()
 		rclpy.spin(joint_state_recorder)
 	except KeyboardInterrupt:
-		# joint_state_recorder.get_logger().info("Destroying Node...")
-		print('\n')
+		pass
 	finally:
 		if rclpy.ok():
 			joint_state_recorder.destroy_node()

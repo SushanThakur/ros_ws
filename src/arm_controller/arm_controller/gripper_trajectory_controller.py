@@ -7,7 +7,7 @@ from rcl_interfaces.msg import SetParametersResult
 from rclpy.parameter import Parameter
 
 FRAME_ID = "tool_link"
-JOINTS = ['grip_left_join', 'grip_right_joint']
+JOINTS = ['grip_left_joint', 'grip_right_joint']
 
 OPEN_POS = [0.0, 0.0]
 CLOSE_POS = [-0.04, 0.04]
@@ -59,7 +59,7 @@ def main():
         gripper_trajectory_controller = GripperTrajectoryController()
         rclpy.spin(gripper_trajectory_controller)
     except KeyboardInterrupt:
-        print()
+        pass
     finally:
         if rclpy.ok():
             gripper_trajectory_controller.destroy_node()
