@@ -34,6 +34,7 @@ setup(
 			"joy_joint_publisher = arm_controller.joy_joint_publisher:main",
 			"joint_state_recorder = arm_controller.joint_state_recorder:main",
 			"joint_state_player = arm_controller.joint_state_player:main",
+			"ik_pub = arm_controller.ik_pub:main",
         ],
     },
 )
