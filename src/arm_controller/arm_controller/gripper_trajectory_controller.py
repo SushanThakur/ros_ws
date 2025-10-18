@@ -51,7 +51,7 @@ class GripperTrajectoryController(Node):
 
         joint_traj.points = [point]
         self.joint_traj_pub.publish(joint_traj)
-        self.get_logger().info(f"Gripper {new_state}")
+        self.get_logger().info(f"Gripper {new_state.lower()}")
 
 def main():
     try:

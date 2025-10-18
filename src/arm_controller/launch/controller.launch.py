@@ -44,6 +44,11 @@ def generate_launch_description():
         package="joy",
         executable="joy_node"
     )
+
+	ik_pub_node = Node(
+		package=package_name,
+		executable="ik_pub"
+	)
 	
 	return LaunchDescription(
 		[
@@ -55,5 +60,6 @@ def generate_launch_description():
 			gripper_traj_pub_node,
 			joint_state_recorder_node,
 			joint_state_player_node,
+			ik_pub_node,
 		]
 	)

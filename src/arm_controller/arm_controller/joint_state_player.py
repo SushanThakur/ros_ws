@@ -110,7 +110,7 @@ class JointStatePlayer(Node):
     def param_change_call(self, params):
         for param in params:
             if param.name == PARAM_NAME and param.type_ == Parameter.Type.INTEGER:
-                state = "PLAYING" if param.value else "STOPPED PLAYING"
+                state = "Playing" if param.value else "Stopped playing"
                 self.get_logger().info(f"{state}")
         return SetParametersResult(successful=True)
 

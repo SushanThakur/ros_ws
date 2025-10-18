@@ -22,16 +22,19 @@ class JointTrajectoryPublisher(Node):
 		self.joy_sub = self.create_subscription(Joy, "joy", self.joy_callback, 10)
 
 		self.pose = "default"
+		self.last_button_state = [0,0]
 		
 	def joy_callback(self, msg):
 		buttons = msg.buttons
 		
-		if buttons[0]:
+		if buttons[0] and not buttons[0] == self.last_button_state[0]:
 			self.pose = "default"
 			self.timer_callback()
-		elif buttons[1]:
+		elif buttons[1] and not buttons[1] == self.last_button_state[1]:
 			self.pose = "write"
 			self.timer_callback()
+		self.last_button_state[0] = buttons[0]
+		self.last_button_state[1] = buttons[1]
 			
 	def timer_callback(self):
 
@@ -43,8 +46,10 @@ class JointTrajectoryPublisher(Node):
 		temp_point = JointTrajectoryPoint()
 		if self.pose == "default":
 			temp_point.positions = default_pose
+			self.get_logger().info("Moving to start position")
 		elif self.pose == "write":
 			temp_point.positions = write_pose
+			self.get_logger().info("Moving to drawing position")
 		temp_point.time_from_start = Duration(sec=1, nanosec=0)
 		
 		joint_traj.points = [temp_point]

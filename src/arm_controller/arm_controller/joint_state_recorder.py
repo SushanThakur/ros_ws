@@ -60,7 +60,7 @@ class JointStateRecorder(Node):
 	def param_change_call(self, params):
 		for param in params:
 			if param.name == PARAM_NAME and param.type_ == Parameter.Type.INTEGER:
-				state = "RECORDING" if param.value else "STOPPED RECORDING"
+				state = "Recording" if param.value else "Stopped recording"
 				self.get_logger().info(f"{state}")
 		return SetParametersResult(successful=True)
 
