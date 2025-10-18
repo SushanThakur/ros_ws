@@ -10,6 +10,8 @@ joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joi
 
 default_pose = [0, 0.4944, 0, 1.4434, 0, 1.0277, 0, 0]
 
+write_pose = [-1.56, -0.90, -1.79, -1.31, -1.50, 1.35, -0.25, 0.65]
+
 class JointTrajectoryPublisher(Node):
 	
 	def __init__(self):
@@ -18,11 +20,17 @@ class JointTrajectoryPublisher(Node):
 		self.joint_traj_pub
 		
 		self.joy_sub = self.create_subscription(Joy, "joy", self.joy_callback, 10)
+
+		self.pose = "default"
 		
 	def joy_callback(self, msg):
 		buttons = msg.buttons
 		
 		if buttons[0]:
+			self.pose = "default"
+			self.timer_callback()
+		elif buttons[1]:
+			self.pose = "write"
 			self.timer_callback()
 			
 	def timer_callback(self):
@@ -33,7 +41,10 @@ class JointTrajectoryPublisher(Node):
 		joint_traj.joint_names = joints
 		
 		temp_point = JointTrajectoryPoint()
-		temp_point.positions = default_pose
+		if self.pose == "default":
+			temp_point.positions = default_pose
+		elif self.pose == "write":
+			temp_point.positions = write_pose
 		temp_point.time_from_start = Duration(sec=1, nanosec=0)
 		
 		joint_traj.points = [temp_point]

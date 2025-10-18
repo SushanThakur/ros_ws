@@ -159,9 +159,9 @@ def generate_launch_description():
         # arguments=["--ros-args", "--log-level", "debug"],
     )
     
-    joy_node = Node(
-        package="joy",
-        executable="joy_node"
+    ik_controller_node = Node(
+        package='ik_controller',
+        executable='ik_controller'
     )
     
     return LaunchDescription(
@@ -178,6 +178,6 @@ def generate_launch_description():
 
             rviz_node,
             servo_node,
-            joy_node,
+            ik_controller_node
         ]
     )

@@ -39,9 +39,15 @@ def generate_launch_description():
 		package=package_name,
 		executable="joint_state_player"
 	)
+
+	joy_node = Node(
+        package="joy",
+        executable="joy_node"
+    )
 	
 	return LaunchDescription(
 		[
+			joy_node,
 			cmd_type_switcher_node,
 			twist_publisher_node,
 			joint_publisher_node,
