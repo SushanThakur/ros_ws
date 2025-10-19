@@ -35,6 +35,7 @@ setup(
 			"joint_state_recorder = arm_controller.joint_state_recorder:main",
 			"joint_state_player = arm_controller.joint_state_player:main",
 			"ik_pub = arm_controller.ik_pub:main",
+			"cam_controller = arm_controller.cam_controller:main",
         ],
     },
 )

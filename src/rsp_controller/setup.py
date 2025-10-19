@@ -25,6 +25,7 @@ setup(
     entry_points={
         'console_scripts': [
 			'serial_controller = rsp_controller.serial_controller:main',
+			'cam_publisher = rsp_controller.cam_publisher:main',
         ],
     },
 )
