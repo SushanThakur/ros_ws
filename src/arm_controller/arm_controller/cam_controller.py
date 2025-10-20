@@ -19,6 +19,11 @@ gripper_joints = ['grip_left_joint', 'grip_right_joint']
 open_pos = [0.0, 0.0]
 close_pos = [-0.04, 0.04]
 
+class Position:
+    def __init__(self, lx=0.0, ly=0.0):
+        self.lx = lx
+        self.ly = ly
+
 class CamController(Node):
 
     def __init__(self):
@@ -27,13 +32,17 @@ class CamController(Node):
         self.cam_sub = self.create_subscription(Image, 'cam_publisher', self.cam_call, 10)
         self.br = CvBridge()	
 
+        self.cam_pub = self.create_publisher(Image, 'processed_cam_pub', 10)
+
+
         self.grip_pub = self.create_publisher(JointTrajectory, "gripper_controller/joint_trajectory", 10)
+        self.twist_pub = self.create_publisher(TwistStamped, "servo_node/delta_twist_cmds", 10)
 
         self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_call, 10)	
         self.last_button_state = 0
 
-        # self.declare_parameter("cam_controller_state", "idle")
-        self.declare_parameter("cam_controller_state", "working")
+        self.declare_parameter("cam_controller_state", "idle")
+        # self.declare_parameter("cam_controller_state", "working")
         self.add_on_set_parameters_callback(self.param_change_call)
 
         self.mpHands = mp.solutions.hands
@@ -73,6 +82,12 @@ class CamController(Node):
                         y = self.ard_map(lm.y, [0, 1], [-1, 1])
                         cv.putText(frame, f'{x:.2f},{y:.2f}', (cx, cy), cv.FONT_HERSHEY_COMPLEX, 0.5, (0,255,0), 1)
 
+                        # call joint_controller
+                        pos = Position()
+                        pos.lx = x
+                        pos.ly = y
+                        self.joint_controller(pos)
+
                     elif id == 4:
                         x4, y4 = lm.x, lm.y
                         cx4, cy4 = int(lm.x * w), int(lm.y * h)
@@ -88,11 +103,11 @@ class CamController(Node):
                 dist = ((x4 - x8)**2 + (y4 - y8)**2)**0.5
                 if dist < 0.04 :
                     cv.putText(frame, 'Closed', (cx4, cy4), cv.FONT_HERSHEY_COMPLEX, 0.7, (0,255,0), 2)
-                    self.get_logger().info("closed")
+                    self.get_logger().debug("closed")
                     self.grip_controller('close')
                 else:
                     cv.putText(frame, 'Opened', (cx4, cy4), cv.FONT_HERSHEY_COMPLEX, 0.7, (0,255,0), 2)
-                    self.get_logger().info("opened")
+                    self.get_logger().debug("opened")
                     self.grip_controller('open')
 
         cTime = time.time()
@@ -102,8 +117,18 @@ class CamController(Node):
         cv.circle(frame, (centerX, centerY), 4, (255, 0, 0), cv.FILLED)
         cv.putText(frame, f'FPS: {int(fps)}', (10, 40), cv.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 1)
 
-        cv.imshow("Hand Tracking", frame)
-        cv.waitKey(1)
+        ros_image = self.br.cv2_to_imgmsg(frame, "bgr8")
+        self.cam_pub.publish(ros_image)
+        # self.get_logger().info("Published Image")
+
+
+		# if you want to see the window pop up when in active mode uncomment these lines
+        
+        # if self.get_parameter('cam_controller_state').value == "working":
+        #     cv.imshow("Hand Tracking", frame)
+        #     cv.waitKey(1)
+        # else:
+        #     cv.destroyAllWindows()
 
     def joy_call(self, msg):
         button = msg.buttons[3] 
@@ -138,9 +163,25 @@ class CamController(Node):
             grip_traj.points = [grip_point]
         
             self.grip_pub.publish(grip_traj)
-            self.get_logger().info(f"Gripper {state}")
+            self.get_logger().debug(f"Gripper {state}")
 
+    def joint_controller(self, pos):
+        if self.get_parameter("cam_controller_state").value == "working":
+            joint_twist = TwistStamped()
+            joint_twist.header.frame_id = frame_id
+            joint_twist.header.stamp = self.get_clock().now().to_msg()
 
+            joint_twist.twist.linear.x = 0.0
+            joint_twist.twist.linear.y = 0.0
+            joint_twist.twist.linear.z = 0.0
+
+            joint_twist.twist.angular.x = -1 * pos.ly
+            joint_twist.twist.angular.y = 0.0
+            joint_twist.twist.angular.z = pos.lx
+
+            self.twist_pub.publish(joint_twist)
+            # self.get_logger().info(f'x={type(joint_twist.twist.linear.x)} y={joint_twist.twist.linear.x:.2f}')
+            
 def main():
     try:
         rclpy.init()

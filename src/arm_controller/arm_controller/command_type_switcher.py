@@ -54,6 +54,7 @@ def main():
 	try:
 		rclpy.init()
 		cmd_type_switcher = CmdTypeSwitcher()
+		cmd_type_switcher.toggle_cmd_type(JOINT_JOG)
 		rclpy.spin(cmd_type_switcher)
 	
 	except KeyboardInterrupt:

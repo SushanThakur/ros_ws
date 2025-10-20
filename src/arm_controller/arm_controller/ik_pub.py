@@ -18,8 +18,6 @@ draw_entity = [
     [0.3,0.1,0.1],
 ]
 
-
-
 class IkPublisher(Node):
     def __init__(self):
         super().__init__(node_name)
@@ -34,9 +32,10 @@ class IkPublisher(Node):
         
     def joy_call(self, msg):
             button = msg.buttons[2]
-            if button and not button == self.last_button_state:
+            axis = msg.axes[7]
+            if axis == 1.0 and not button == self.last_button_state:
                 self.ik_pub_call()
-            self.last_button_state = button
+            self.last_button_state = axis
 
     def ik_pub_call(self):
         self.get_logger().info("Drawing started")

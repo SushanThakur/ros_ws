@@ -21,12 +21,13 @@ class CamPub(Node):
 		if ret:
 			ros_image = self.bridge.cv2_to_imgmsg(frame, "bgr8")
 			self.cam_pub.publish(ros_image)
-			self.get_logger().info("Published Image")
+			self.get_logger().debug("Published Image")
 
 def main():
 	try:
 		rclpy.init()
 		cam_publisher = CamPub()
+		cam_publisher.get_logger().info("Publishing Image")
 		rclpy.spin(cam_publisher)
 	except KeyboardInterrupt:
 		pass

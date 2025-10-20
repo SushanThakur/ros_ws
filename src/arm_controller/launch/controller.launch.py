@@ -49,6 +49,16 @@ def generate_launch_description():
 		package=package_name,
 		executable="ik_pub"
 	)
+
+	cam_controller_node = Node(
+		package=package_name,
+		executable="cam_controller",
+	)
+
+	cam_publisher_node = Node(
+		package="rsp_controller",
+		executable="cam_publisher",
+	)
 	
 	return LaunchDescription(
 		[
@@ -61,5 +71,7 @@ def generate_launch_description():
 			joint_state_recorder_node,
 			joint_state_player_node,
 			ik_pub_node,
+			cam_controller_node,
+			# cam_publisher_node,
 		]
 	)
