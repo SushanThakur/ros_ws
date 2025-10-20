@@ -2,11 +2,22 @@
 
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import Image, Joy
 import cv2 as cv
 from cv_bridge import CvBridge
 import mediapipe as mp
 import time
+from builtin_interfaces.msg import Duration
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from geometry_msgs.msg import TwistStamped
+from rcl_interfaces.msg import SetParametersResult
+from rclpy.parameter import Parameter
+
+frame_id = "base_link"
+joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
+gripper_joints = ['grip_left_joint', 'grip_right_joint']
+open_pos = [0.0, 0.0]
+close_pos = [-0.04, 0.04]
 
 class CamController(Node):
 
@@ -14,18 +25,29 @@ class CamController(Node):
         super().__init__('cam_controller')
 
         self.cam_sub = self.create_subscription(Image, 'cam_publisher', self.cam_call, 10)
-        self.br = CvBridge()
+        self.br = CvBridge()	
+
+        self.grip_pub = self.create_publisher(JointTrajectory, "gripper_controller/joint_trajectory", 10)
+
+        self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_call, 10)	
+        self.last_button_state = 0
+
+        # self.declare_parameter("cam_controller_state", "idle")
+        self.declare_parameter("cam_controller_state", "working")
+        self.add_on_set_parameters_callback(self.param_change_call)
 
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(False, 1)
         self.mpDraw = mp.solutions.drawing_utils
         self.pTime = 0
 
-    def ard_map(self, value, fromLow, fromHigh, toLow, toHigh):
+    def ard_map(self, value, from_val, to_val):
+        fromLow, fromHigh = from_val[0], from_val[1]
+        toLow, toHigh = to_val[0], to_val[1]
         return float((value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow)
 
     def cam_call(self, msg):
-        self.get_logger().info('Receiving video frame')
+        self.get_logger().debug('Receiving video frame')
 
         frame = self.br.imgmsg_to_cv2(msg, desired_encoding='bgr8')
 
@@ -47,8 +69,8 @@ class CamController(Node):
                         cv.circle(frame, (cx, cy), 5, (0, 255, 0), cv.FILLED)
                         cv.line(frame, (centerX, centerY), (cx, cy), (255, 255, 255), 2)
                         
-                        x = self.ard_map(lm.x, 0, 1, -1, 1)
-                        y = self.ard_map(lm.y, 0, 1, -1, 1)
+                        x = self.ard_map(lm.x, [0, 1], [-1, 1])
+                        y = self.ard_map(lm.y, [0, 1], [-1, 1])
                         cv.putText(frame, f'{x:.2f},{y:.2f}', (cx, cy), cv.FONT_HERSHEY_COMPLEX, 0.5, (0,255,0), 1)
 
                     elif id == 4:
@@ -66,6 +88,12 @@ class CamController(Node):
                 dist = ((x4 - x8)**2 + (y4 - y8)**2)**0.5
                 if dist < 0.04 :
                     cv.putText(frame, 'Closed', (cx4, cy4), cv.FONT_HERSHEY_COMPLEX, 0.7, (0,255,0), 2)
+                    self.get_logger().info("closed")
+                    self.grip_controller('close')
+                else:
+                    cv.putText(frame, 'Opened', (cx4, cy4), cv.FONT_HERSHEY_COMPLEX, 0.7, (0,255,0), 2)
+                    self.get_logger().info("opened")
+                    self.grip_controller('open')
 
         cTime = time.time()
         fps = 1 / (cTime - self.pTime) if cTime != self.pTime else 0
@@ -76,6 +104,42 @@ class CamController(Node):
 
         cv.imshow("Hand Tracking", frame)
         cv.waitKey(1)
+
+    def joy_call(self, msg):
+        button = msg.buttons[3] 
+        if button and not button == self.last_button_state:
+            cam_state = self.get_parameter("cam_controller_state").value
+            self.toggle_cam_state(cam_state)
+        self.last_button_state = button
+
+    def param_change_call(self, params):
+        result = SetParametersResult()
+        for param in params:
+            if param.name == "cam_controller_state" and param.type_ == Parameter.Type.STRING:
+                self.get_logger().info(f"cam_controller_state set to: {param.value}")
+                result.successful = True
+        return result
+    
+    def toggle_cam_state(self, state):
+        new_state = "working" if state == "idle" else "idle"
+        self.set_parameters([Parameter("cam_controller_state", Parameter.Type.STRING, new_state)])
+
+    def grip_controller(self, state):
+        if self.get_parameter("cam_controller_state").value == "working":
+            grip_traj = JointTrajectory()
+            grip_traj.header.frame_id = frame_id
+            grip_traj.header.stamp = self.get_clock().now().to_msg()
+            grip_traj.joint_names = gripper_joints
+
+            grip_point = JointTrajectoryPoint()
+            grip_point.positions = close_pos if state == "close" else open_pos
+            grip_point.time_from_start = Duration(sec=1)
+
+            grip_traj.points = [grip_point]
+        
+            self.grip_pub.publish(grip_traj)
+            self.get_logger().info(f"Gripper {state}")
+
 
 def main():
     try:

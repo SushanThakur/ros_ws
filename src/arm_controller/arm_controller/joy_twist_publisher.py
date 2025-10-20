@@ -5,7 +5,6 @@ from geometry_msgs.msg import TwistStamped
 from rcl_interfaces.srv import GetParameters
 
 FRAME_ID = "base_link"
-
 joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
 
 JOINT_JOG = 0
