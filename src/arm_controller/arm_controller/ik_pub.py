@@ -9,13 +9,45 @@ node_name = 'ik_cmd_pub'
 
 default_orient = [0.0, 0.0, 0.707, -0.707]
 
+# draw_entity = [
+#     [0.4,0.3,0.1],
+#     [0.3,0.3,0.1],
+#     [0.3,0.2,0.1],
+#     [0.4,0.2,0.1],
+#     [0.4,0.1,0.1],
+#     [0.3,0.1,0.1],
+# ]
+
 draw_entity = [
-    [0.4,0.3,0.1],
-    [0.3,0.3,0.1],
-    [0.3,0.2,0.1],
-    [0.4,0.2,0.1],
-    [0.4,0.1,0.1],
-    [0.3,0.1,0.1],
+    
+	# S
+    [0.4, 0.4, 0.1],
+    [0.3, 0.4, 0.1],
+    [0.3, 0.3, 0.1],
+    [0.4, 0.3, 0.1],
+    [0.4, 0.2, 0.1],
+    [0.3, 0.2, 0.1],
+    
+	[0.3, 0.2, 0.2],
+    [0.2, 0.2, 0.2],
+    
+	# U
+    [0.2, 0.2, 0.1],
+    [0.2, 0.4, 0.1],
+    [0.1, 0.4, 0.1],
+    [0.1, 0.2, 0.1],
+    
+	[0.1, 0.2, 0.2],
+    [-0.1, 0.2, 0.2],
+    
+	# S
+    [-0.1, 0.2, 0.1],
+    [0.0, 0.2, 0.1],
+    [0.0, 0.3, 0.1],
+    [-0.1, 0.3, 0.1],
+    [-0.1, 0.4, 0.1],
+    [0.0, 0.4, 0.1],
+    
 ]
 
 class IkPublisher(Node):
@@ -25,7 +57,7 @@ class IkPublisher(Node):
         self.ik_pub_ = self.create_publisher(Pose, node_name, 10)
         self.joy_sub_ = self.create_subscription(Joy, 'joy', self.joy_call, 10)
 
-        # self.timer_call = self.create_timer(1, self.ik_pub_call)
+        self.timer_call = self.create_timer(1, self.ik_pub_call)
 
         self.point_index = 0
         self.last_button_state = 0
@@ -57,8 +89,8 @@ class IkPublisher(Node):
 
         self.get_logger().info("Drawing stopped")
         self.point_index = 0
-        # self.destroy_node()
-        # sys.exit()
+        self.destroy_node()
+        sys.exit()
 
 def main():
     try:
