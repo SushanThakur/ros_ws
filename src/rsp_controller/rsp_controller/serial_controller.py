@@ -10,21 +10,30 @@ class SerialController(Node):
 		self.joint_state_sub = self.create_subscription(JointState, 'joint_states', self.joint_state_call, 10)
 
 		# self.last_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-		self.last_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		self.last_joint_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		self.last_gripper_state = [0.0, 0.0]
 
 
 	def joint_state_call(self, joints):
-		joint_states = list(re.split(r'[\[\],]',str(joints.position))[4:-1])
+		joint_states = list(re.split(r'[\[\],]',str(joints.position))[2:-1])
 		joint_states = [float(f) for f in joint_states]
-		joint_states = [f"{f:.2f}" for f in joint_states]
+		joint_states = [f"{f:.3f}" for f in joint_states]
 		joint_states = [float(f) for f in joint_states]
+
+		gripper_state = joint_states[:2]
+		joint_states = joint_states[2:-1]
 		
-		if(self.last_state == joint_states):
+		if(self.last_joint_state == joint_states):
 			pass
 		else:
-			self.get_logger().info(f"MOVE>{joint_states}<")
+			self.get_logger().info(f"MOVE{joint_states}")
 
-		self.last_state = joint_states.copy()
+		if self.last_gripper_state == gripper_state:
+			pass
+		else:
+			self.get_logger().info(f"GRIP{gripper_state}")
+
+		self.last_joint_state = joint_states.copy()
 
 def main():
 	try:
