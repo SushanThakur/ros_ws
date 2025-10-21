@@ -34,6 +34,7 @@ class SerialController(Node):
 			self.get_logger().info(f"GRIP{gripper_state}")
 
 		self.last_joint_state = joint_states.copy()
+		self.last_gripper_state = gripper_state.copy()
 
 def main():
 	try:
