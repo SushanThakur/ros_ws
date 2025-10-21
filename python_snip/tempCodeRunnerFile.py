@@ -182,18 +182,19 @@ new_coordinates = []
 last_point = [0.0, 0.0]
 for item in coordinates:
     # print(coordinate['points'])
-    # for a,b in item['points']:
-        # print(f'last point = {last_point}')
-        # print(f'current = {[x,y]}')
-        # print(item['type'])
-        # tx = b[0]/100 + 0.27
-        # ty = b[1]/100 + 0.2
-        # if item['type']=='Move':
-        #     tz = 0.2
-        # elif item['type']=='Line':
-        #     tz = 0.1
+    for x,y in item['points']:
+        if not last_point == [x,y]:
+            # print(f'last point = {last_point}')
+            # print(f'current = {[x,y]}')
+            print(item['type'])
+            print(x)
+            tx = x/100 + 0.27
+            ty = y/100 + 0.2
+            if item['type']=='Move':
+                tz = 0.2
+            elif item['type']=='Line':
+                tz = 0.1
         # print(f'[{tx:.3f} ,{ty:.3f} ,{tz:.3f}],')
-        # print(item['points'])
-
-    print(f'{item['type']} {item['points']}')
+        print(item['points'])
+        last_point = [x,y]
 
