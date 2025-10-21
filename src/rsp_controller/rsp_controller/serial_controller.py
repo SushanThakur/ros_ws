@@ -1,20 +1,24 @@
 import re
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import JointState
+from sensor_msgs.msg import JointState, Joy
 
 class SerialController(Node):
 	def __init__(self):
 		super().__init__('serial_controller')
 
-		self.joint_state_sub = self.create_subscription(JointState, 'joint_states', self.joint_state_call, 10)
+		self.joint_state_sub = self.create_subscription(JointState, 'joint_states', self.serial_publisher, 10)
+		
+		self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_call, 10)
 
 		# self.last_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 		self.last_joint_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 		self.last_gripper_state = [0.0, 0.0]
 
+	def joy_call(self):
+		pass
 
-	def joint_state_call(self, joints):
+	def serial_publisher(self, joints):
 		joint_states = list(re.split(r'[\[\],]',str(joints.position))[2:-1])
 		joint_states = [float(f) for f in joint_states]
 		joint_states = [f"{f:.3f}" for f in joint_states]

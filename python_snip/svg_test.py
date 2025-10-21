@@ -165,7 +165,7 @@ def print_coordinates(coordinates):
                 print(f"  ({point[0]:.2f}, {point[1]:.2f})")
 
 # Example usage
-svg_file = 'T.svg'
+svg_file = 'TEST.svg'
 coordinates = extract_coordinates_from_svg(svg_file)
 
 # coordinates [
@@ -182,18 +182,28 @@ new_coordinates = []
 last_point = [0.0, 0.0]
 for item in coordinates:
     # print(coordinate['points'])
-    # for a,b in item['points']:
+    for a,b in item['points']:
         # print(f'last point = {last_point}')
         # print(f'current = {[x,y]}')
         # print(item['type'])
-        # tx = b[0]/100 + 0.27
-        # ty = b[1]/100 + 0.2
-        # if item['type']=='Move':
-        #     tz = 0.2
-        # elif item['type']=='Line':
-        #     tz = 0.1
-        # print(f'[{tx:.3f} ,{ty:.3f} ,{tz:.3f}],')
-        # print(item['points'])
+        tx = 1 * (a/100 - 0.4)
+        ty = -1 * (b/100 - 0.3)
 
-    print(f'{item['type']} {item['points']}')
+        px = 1 * (a/100 - 0.4)
+        py = -1 * (b/100 - 0.3)
+
+        if item['type']=='Move':
+            tz = 0.2
+        elif item['type']=='Line':
+            tz = 0.1
+        if not last_point == [a,b]:
+            print(f'[{tx:.3f} ,{ty:.3f} ,{tz:.3f}],')
+            # plt.plot(tx, ty, 'o')
+            plt.plot(tx, ty, 'o')
+        last_point = [a,b]
+        # print(item['points'])
+    # print(f'{item['type']} {item['points']}')
+
+plt.show()
+
 
