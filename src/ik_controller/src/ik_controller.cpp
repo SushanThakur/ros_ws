@@ -3,6 +3,7 @@
 #include <moveit/move_group_interface/move_group_interface.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <moveit_msgs/msg/move_it_error_codes.hpp>
+#include <trajectory_msgs/msg/joint_trajectory.hpp>
 
 using std::placeholders::_1;
 
@@ -12,100 +13,114 @@ std::string group_name = "robotic_arm";
 class PsSub : public rclcpp::Node
 {
 public:
-	PsSub() : Node("ps_subscriber")
-	{
-		// Subscribe to /ee_pose topic
-		subscription_ = this->create_subscription<geometry_msgs::msg::Pose>(
-			channel_to_sub, 10, std::bind(&PsSub::topic_callback, this, _1));
+    PsSub() : Node("ps_subscriber")
+    {
+        // Subscribe to /ee_pose topic
+        subscription_ = this->create_subscription<geometry_msgs::msg::Pose>(
+            channel_to_sub, 10, std::bind(&PsSub::topic_callback, this, _1));
 
-		RCLCPP_INFO(this->get_logger(), "Subscribed to %s ",channel_to_sub.c_str());
+        RCLCPP_INFO(this->get_logger(), "Subscribed to %s ", channel_to_sub.c_str());
 
-		// Create a timer to initialize MoveGroupInterface after construction
-		init_timer_ = this->create_wall_timer(
-			std::chrono::milliseconds(100),
-			std::bind(&PsSub::initialize_move_group, this));
-	}
+        // Create a timer to initialize MoveGroupInterface after construction
+        init_timer_ = this->create_wall_timer(
+            std::chrono::milliseconds(100),
+            std::bind(&PsSub::initialize_move_group, this));
+    }
 
 private:
-	void initialize_move_group()
-	{
-		try
-		{
-			// Log node namespace for debugging
-			RCLCPP_INFO(this->get_logger(), "Node namespace: %s", this->get_namespace());
+    void initialize_move_group()
+    {
+        try
+        {
+            // Log node namespace for debugging
+            RCLCPP_INFO(this->get_logger(), "Node namespace: %s", this->get_namespace());
 
-			// Initialize MoveGroupInterface
-			move_group_interface_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>
-			(shared_from_this(), group_name);
+            // Initialize MoveGroupInterface
+            move_group_interface_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>(
+                shared_from_this(), group_name);
 
-			move_group_interface_ -> setMaxAccelerationScalingFactor(1.0);
-			move_group_interface_ -> setMaxVelocityScalingFactor(1.0);
-			
-			RCLCPP_INFO(this->get_logger(), "MoveGroupInterface initialized for group: %s",group_name.c_str());
+            move_group_interface_->setMaxAccelerationScalingFactor(1.0);
+            move_group_interface_->setMaxVelocityScalingFactor(1.0);
+            
+            RCLCPP_INFO(this->get_logger(), "MoveGroupInterface initialized for group: %s", group_name.c_str());
 
-			init_timer_->cancel();
-		}
-		catch (const std::exception& e)
-		{
-			RCLCPP_ERROR(this->get_logger(), "Failed to initialize MoveGroupInterface: %s", e.what());
-		}
-	}
+            init_timer_->cancel();
+        }
+        catch (const std::exception& e)
+        {
+            RCLCPP_ERROR(this->get_logger(), "Failed to initialize MoveGroupInterface: %s", e.what());
+        }
+    }
 
-	void topic_callback(const geometry_msgs::msg::Pose::SharedPtr pose)
-	{
-		// Log the received pose
-		RCLCPP_INFO(
-			this->get_logger(),
-			"Pose: position(x=%.3f, y=%.3f, z=%.3f), Orientation(x=%.3f, y=%.3f, z=%.3f, w=%.3f)",
-			pose->position.x, pose->position.y, pose->position.z,
-			pose->orientation.x, pose->orientation.y, pose->orientation.z, pose->orientation.w
-		);
+    void topic_callback(const geometry_msgs::msg::Pose::SharedPtr pose)
+    {
+        // Log the received pose
+        RCLCPP_INFO(
+            this->get_logger(),
+            "Pose: position(x=%.3f, y=%.3f, z=%.3f), Orientation(x=%.3f, y=%.3f, z=%.3f, w=%.3f)",
+            pose->position.x, pose->position.y, pose->position.z,
+            pose->orientation.x, pose->orientation.y, pose->orientation.z, pose->orientation.w
+        );
 
-		// Check if MoveGroupInterface is initialized
-		if (!move_group_interface_)
-		{
-			RCLCPP_ERROR(this->get_logger(), "MoveGroupInterface not initialized! Skipping planning.");
-			return;
-		}
+        // Check if MoveGroupInterface is initialized
+        if (!move_group_interface_)
+        {
+            RCLCPP_ERROR(this->get_logger(), "MoveGroupInterface not initialized! Skipping planning.");
+            return;
+        }
 
-		try
-		{
-			// Set the target pose
-			move_group_interface_->setPoseTarget(*pose);
-			RCLCPP_INFO(this->get_logger(), "Set pose target");
+        try
+        {
+            // **CARTESIAN PATH PLANNING**
+            
+            // Create waypoints (single point for direct Cartesian motion)
+            std::vector<geometry_msgs::msg::Pose> waypoints;
+            waypoints.push_back(*pose);
 
-			// Plan
-			moveit::planning_interface::MoveGroupInterface::Plan plan_msg;
-			bool success = (move_group_interface_->plan(plan_msg) == moveit_msgs::msg::MoveItErrorCodes::SUCCESS);
-			RCLCPP_INFO(this->get_logger(), "Planning %s", success ? "succeeded" : "failed");
+            // Set Cartesian path parameters
+            double eef_step = 0.01;  // End-effector step size (meters)
+            double jump_threshold = 0.2;  // No joint jumps allowed
+            moveit_msgs::msg::RobotTrajectory trajectory;
 
-			if (success)
-			{
-				// Execute the plan
-				move_group_interface_->execute(plan_msg);
-				RCLCPP_INFO(this->get_logger(), "Plan executed successfully");
-			}
-			else
-			{
-				RCLCPP_ERROR(this->get_logger(), "Planning failed!");
-			}
-		}
-		catch (const std::exception& e)
-		{
-			RCLCPP_ERROR(this->get_logger(), "Exception during planning/execution: %s", e.what());
-		}
-	}
+            // Compute Cartesian path
+            double fraction = move_group_interface_->computeCartesianPath(
+                waypoints,                                    // Waypoints
+                eef_step,                                     // End-effector step (m)
+                jump_threshold,                               // Jump threshold
+                trajectory                                    // Output trajectory
+            );
 
-	rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr subscription_;
-	std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_interface_;
-	rclcpp::TimerBase::SharedPtr init_timer_;
+            RCLCPP_INFO(this->get_logger(), "Cartesian path fraction: %.2f", fraction);
+
+            if (fraction > 0.95)  // Success threshold (95% of path achieved)
+            {
+                // Execute the Cartesian trajectory
+                move_group_interface_->execute(trajectory);
+                RCLCPP_INFO(this->get_logger(), "Cartesian path executed successfully");
+            }
+            else
+            {
+                RCLCPP_WARN(this->get_logger(), 
+                    "Cartesian planning failed! Only %.1f%% of path achieved", 
+                    fraction * 100.0);
+            }
+        }
+        catch (const std::exception& e)
+        {
+            RCLCPP_ERROR(this->get_logger(), "Exception during Cartesian planning/execution: %s", e.what());
+        }
+    }
+
+    rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr subscription_;
+    std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_interface_;
+    rclcpp::TimerBase::SharedPtr init_timer_;
 };
 
 int main(int argc, char *argv[])
-{	
-	rclcpp::init(argc, argv);
-	auto node = std::make_shared<PsSub>();
-	rclcpp::spin(node);
-	rclcpp::shutdown();
-	return 0;
+{   
+    rclcpp::init(argc, argv);
+    auto node = std::make_shared<PsSub>();
+    rclcpp::spin(node);
+    rclcpp::shutdown();
+    return 0;
 }

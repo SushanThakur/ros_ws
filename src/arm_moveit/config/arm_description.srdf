@@ -56,6 +56,16 @@
         <joint name="joint_7" value="-0.25"/>
         <joint name="tool_joint" value="0.65"/>
     </group_state>
+	<group_state name="draw_2" group="robotic_arm">
+        <joint name="joint_1" value="1.62"/>
+        <joint name="joint_2" value="-1.56"/>
+        <joint name="joint_3" value="1.78"/>
+        <joint name="joint_4" value="-1.37"/>
+        <joint name="joint_5" value="-1.00"/>
+        <joint name="joint_6" value="-1.25"/>
+        <joint name="joint_7" value="-3.04"/>
+        <joint name="tool_joint" value="2.54"/>
+    </group_state>
 
 	<group_state name="opened" group="gripper">
         <joint name="grip_left_joint" value="0.0"/>

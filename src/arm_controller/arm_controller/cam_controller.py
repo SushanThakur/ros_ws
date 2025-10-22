@@ -119,8 +119,7 @@ class CamController(Node):
 
         ros_image = self.br.cv2_to_imgmsg(frame, "bgr8")
         self.cam_pub.publish(ros_image)
-        # self.get_logger().info("Published Image")
-
+        self.get_logger().debug("Published Image")
 
 		# if you want to see the window pop up when in active mode uncomment these lines
         
@@ -180,7 +179,7 @@ class CamController(Node):
             joint_twist.twist.angular.z = pos.lx
 
             self.twist_pub.publish(joint_twist)
-            # self.get_logger().info(f'x={type(joint_twist.twist.linear.x)} y={joint_twist.twist.linear.x:.2f}')
+            self.get_logger().debug(f'x={type(joint_twist.twist.linear.x)} y={joint_twist.twist.linear.x:.2f}')
             
 def main():
     try:

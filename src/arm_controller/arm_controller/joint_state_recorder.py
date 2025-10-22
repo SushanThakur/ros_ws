@@ -1,4 +1,3 @@
-import string
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
@@ -11,11 +10,13 @@ import time
 PARAM_NAME = 'current_recording_state'
 RECORDING = 0
 
+PATH = 'recording/pos.txt'
+
 class JointStateRecorder(Node):
 	def __init__(self):
 		super().__init__('joint_state_recorder')
 
-		self.out_file_name = "ignore/pos.txt"
+		self.out_file_name = PATH
 		self.last_button_state = 0
 		self.file_mode = 'w'
 
