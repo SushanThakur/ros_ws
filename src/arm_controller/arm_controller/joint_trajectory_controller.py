@@ -8,7 +8,7 @@ from sensor_msgs.msg import Joy
 FRAME_ID = "base_link"
 joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
 
-default_pose = [0, 0.4944, 0, 1.4434, 0, 1.0277, 0, 0]
+default_pose = [0, 1.0, 0, 1.57, 0, 0.60, 0, 0]
 
 write_pose = [-1.56, -0.90, -1.79, -1.31, -1.50, 1.35, -0.25, 0.65]
 

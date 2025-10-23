@@ -7,7 +7,7 @@ moveit_setup_assistant_config:
   package_settings:
     author_name: Sushant Thakur
     author_email: 081bel092.sushant@pcampus.edu.np
-    generated_timestamp: 1760625144
+    generated_timestamp: 1761210985
   control_xacro:
     command:
       - position

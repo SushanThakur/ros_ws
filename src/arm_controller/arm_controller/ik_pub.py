@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 # ===============================================================
 # Configuration Constants
 # ===============================================================
-AUTO_RUN = True
+AUTO_RUN = False
 SVG_FILE = "svg/workspace.svg"
 
 SCALE_FACTOR = 0.001       # Converts SVG px → meters
@@ -195,7 +195,8 @@ class IkPublisher(Node):
         # plt.plot((0,0), 'o')
         plt.grid(True)
         plt.axis('equal')
-        plt.show(block=True)
+        if AUTO_RUN:
+            plt.show(block=True)
 
         # Publish poses sequentially
         self.publish_poses(draw_points)

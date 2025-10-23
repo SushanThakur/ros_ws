@@ -31,25 +31,31 @@ private:
 	{
 		try
 		{
-			// Log node namespace for debugging
 			RCLCPP_INFO(this->get_logger(), "Node namespace: %s", this->get_namespace());
 
-			// Initialize MoveGroupInterface
-			move_group_interface_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>
-			(shared_from_this(), group_name);
+			move_group_interface_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>(
+				shared_from_this(), group_name);
 
-			move_group_interface_ -> setMaxAccelerationScalingFactor(1.0);
-			move_group_interface_ -> setMaxVelocityScalingFactor(1.0);
-			
-			RCLCPP_INFO(this->get_logger(), "MoveGroupInterface initialized for group: %s",group_name.c_str());
+			// Motion strictness and predictability
+			move_group_interface_->setGoalTolerance(0.001);
+			move_group_interface_->setGoalOrientationTolerance(0.001);
+			move_group_interface_->setGoalJointTolerance(0.001);
+			move_group_interface_->setPlanningTime(1.0);
+			move_group_interface_->setNumPlanningAttempts(2);
+			move_group_interface_->setPoseReferenceFrame("base_link");
+			move_group_interface_->setEndEffectorLink("tool_link");
+			move_group_interface_->setMaxVelocityScalingFactor(1.0);
+			move_group_interface_->setMaxAccelerationScalingFactor(1.0);
 
+			RCLCPP_INFO(this->get_logger(), "MoveGroupInterface initialized for group: %s", group_name.c_str());
 			init_timer_->cancel();
 		}
-		catch (const std::exception& e)
+		catch (const std::exception &e)
 		{
 			RCLCPP_ERROR(this->get_logger(), "Failed to initialize MoveGroupInterface: %s", e.what());
 		}
 	}
+
 
 	void topic_callback(const geometry_msgs::msg::Pose::SharedPtr pose)
 	{
@@ -69,26 +75,58 @@ private:
 		}
 
 		try
-		{
-			// Set the target pose
-			move_group_interface_->setPoseTarget(*pose);
-			RCLCPP_INFO(this->get_logger(), "Set pose target");
+		{	
 
-			// Plan
-			moveit::planning_interface::MoveGroupInterface::Plan plan_msg;
-			bool success = (move_group_interface_->plan(plan_msg) == moveit_msgs::msg::MoveItErrorCodes::SUCCESS);
-			RCLCPP_INFO(this->get_logger(), "Planning %s", success ? "succeeded" : "failed");
+			// CARTESIAN PATH PLANNING
 
-			if (success)
+			std::vector<geometry_msgs::msg::Pose> waypoints;
+			waypoints.push_back(*pose);
+
+			// Set Cartesian path parameters
+			double eef_step = 0.01;
+			// double jump_threshold = 0.2;
+			moveit_msgs::msg::RobotTrajectory trajectory;
+			
+			// Compute Cartesian Path
+			double fraction = move_group_interface_->computeCartesianPath(
+				waypoints,
+				eef_step,
+				// jump_threshold,
+				trajectory
+			);
+
+			RCLCPP_INFO(this->get_logger(), "Cartesian path fraction: %.2f", fraction);
+
+			if (fraction > 0.80 )
 			{
-				// Execute the plan
-				move_group_interface_->execute(plan_msg);
-				RCLCPP_INFO(this->get_logger(), "Plan executed successfully");
+				// Execute
+				move_group_interface_->execute(trajectory);
+				RCLCPP_INFO(this->get_logger(), "Cartesian path executed successfully");
 			}
-			else
-			{
-				RCLCPP_ERROR(this->get_logger(), "Planning failed!");
+			else {
+				
+				// Set the target pose
+				move_group_interface_->setPoseTarget(*pose);
+				RCLCPP_INFO(this->get_logger(), "Set pose target");
+
+				// Plan
+				moveit::planning_interface::MoveGroupInterface::Plan plan_msg;
+				bool success = (move_group_interface_->plan(plan_msg) == moveit_msgs::msg::MoveItErrorCodes::SUCCESS);
+				RCLCPP_INFO(this->get_logger(), "Planning %s", success ? "succeeded" : "failed");
+
+				if (success)
+				{
+					// Execute the plan
+					move_group_interface_->setStartStateToCurrentState();
+					move_group_interface_->execute(plan_msg);
+					RCLCPP_INFO(this->get_logger(), "Plan executed successfully");
+				}
+				else
+				{
+					RCLCPP_ERROR(this->get_logger(), "Planning failed!");
+				}
 			}
+
 		}
 		catch (const std::exception& e)
 		{

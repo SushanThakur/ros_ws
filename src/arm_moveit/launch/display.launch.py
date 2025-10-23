@@ -9,7 +9,6 @@ from ament_index_python.packages import get_package_share_directory
 from moveit_configs_utils import MoveItConfigsBuilder
 from launch_param_builder import ParameterBuilder
 
-
 def generate_launch_description():
 
     # Command-line arguments

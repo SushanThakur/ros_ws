@@ -20,6 +20,7 @@
         <joint name="joint_6"/>
         <joint name="joint_7"/>
         <joint name="tool_joint"/>
+        <joint name="cam_joint"/>
     </group>
     <group name="gripper">
         <joint name="grip_left_joint"/>
@@ -36,27 +37,27 @@
         <joint name="joint_7" value="0"/>
         <joint name="tool_joint" value="0"/>
     </group_state>
-    <group_state name="start" group="robotic_arm">
+	<group_state name="start" group="robotic_arm">
         <joint name="joint_1" value="0"/>
-        <joint name="joint_2" value="0.78"/>
+        <joint name="joint_2" value="1.00"/>
         <joint name="joint_3" value="0"/>
         <joint name="joint_4" value="1.57"/>
         <joint name="joint_5" value="0"/>
-        <joint name="joint_6" value="0.78"/>
+        <joint name="joint_6" value="0.60"/>
         <joint name="joint_7" value="0"/>
         <joint name="tool_joint" value="0"/>
     </group_state>
-	<group_state name="draw" group="robotic_arm">
-        <joint name="joint_1" value="-1.56"/>
-        <joint name="joint_2" value="-0.90"/>
-        <joint name="joint_3" value="-1.79"/>
-        <joint name="joint_4" value="-1.31"/>
-        <joint name="joint_5" value="-1.50"/>
-        <joint name="joint_6" value="1.35"/>
-        <joint name="joint_7" value="-0.25"/>
-        <joint name="tool_joint" value="0.65"/>
+    <group_state name="down" group="robotic_arm">
+        <joint name="joint_1" value="0"/>
+        <joint name="joint_2" value="-0.6852"/>
+        <joint name="joint_3" value="0"/>
+        <joint name="joint_4" value="0.866"/>
+        <joint name="joint_5" value="0"/>
+        <joint name="joint_6" value="0"/>
+        <joint name="joint_7" value="0"/>
+        <joint name="tool_joint" value="0"/>
     </group_state>
-	<group_state name="draw_2" group="robotic_arm">
+	<!-- <group_state name="draw" group="robotic_arm">
         <joint name="joint_1" value="1.62"/>
         <joint name="joint_2" value="-1.56"/>
         <joint name="joint_3" value="1.78"/>
@@ -65,20 +66,27 @@
         <joint name="joint_6" value="-1.25"/>
         <joint name="joint_7" value="-3.04"/>
         <joint name="tool_joint" value="2.54"/>
+    </group_state> -->
+	<group_state name="draw" group="robotic_arm">
+        <joint name="joint_1" value="-1.09"/>
+        <joint name="joint_2" value="-1.26"/>
+        <joint name="joint_3" value="0.72"/>
+        <joint name="joint_4" value="1.37"/>
+        <joint name="joint_5" value="2.29"/>
+        <joint name="joint_6" value="0.88"/>
+        <joint name="joint_7" value="-0.15"/>
+        <joint name="tool_joint" value="3.05"/>
     </group_state>
-
-	<group_state name="opened" group="gripper">
-        <joint name="grip_left_joint" value="0.0"/>
-        <joint name="grip_right_joint" value="0.0"/>
+    <group_state name="opened" group="gripper">
+        <joint name="grip_left_joint" value="0"/>
+        <joint name="grip_right_joint" value="0"/>
     </group_state>
-
-	<group_state name="closed" group="gripper">
+    <group_state name="closed" group="gripper">
         <joint name="grip_left_joint" value="-0.04"/>
         <joint name="grip_right_joint" value="0.04"/>
     </group_state>
-
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="gripper" parent_link="tool_link" group="gripper"/>
+    <end_effector name="gripper" parent_link="tool_link" group="robotic_arm"/>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="base_link"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
@@ -86,7 +94,12 @@
     <disable_collisions link1="base_link" link2="link_2" reason="Never"/>
     <disable_collisions link1="base_link" link2="link_3" reason="Never"/>
     <disable_collisions link1="base_link" link2="link_4" reason="Never"/>
-    <disable_collisions link1="base_link" link2="link_5" reason="Never"/>
+    <disable_collisions link1="cam_link" link2="grip_left_link" reason="Never"/>
+    <disable_collisions link1="cam_link" link2="grip_right_link" reason="Never"/>
+    <disable_collisions link1="cam_link" link2="link_4" reason="Never"/>
+    <disable_collisions link1="cam_link" link2="link_6" reason="Never"/>
+    <disable_collisions link1="cam_link" link2="link_7" reason="Never"/>
+    <disable_collisions link1="cam_link" link2="tool_link" reason="Adjacent"/>
     <disable_collisions link1="grip_left_link" link2="grip_right_link" reason="Never"/>
     <disable_collisions link1="grip_left_link" link2="link_6" reason="Never"/>
     <disable_collisions link1="grip_left_link" link2="link_7" reason="Never"/>

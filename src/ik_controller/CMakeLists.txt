@@ -9,6 +9,14 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(moveit REQUIRED)
+find_package(rclcpp REQUIRED)
+
+find_package(moveit_core REQUIRED)
+find_package(moveit_ros_planning REQUIRED)
+find_package(moveit_ros_planning_interface REQUIRED)
+
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -30,6 +38,10 @@ ament_target_dependencies (ik_controller
 	moveit_ros_planning_interface
 	rclcpp
 	geometry_msgs
+	moveit
+	moveit_core
+	moveit_ros_planning
+	moveit_ros_planning_interface
 )
 
 install(TARGETS ik_controller 
