@@ -3,14 +3,17 @@ from rclpy.node import Node
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from builtin_interfaces.msg import Duration
 from sensor_msgs.msg import Joy
+import time
 
 
 FRAME_ID = "base_link"
 joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
 
 default_pose = [0, 1.0, 0, 1.57, 0, 0.60, 0, 0]
+down_pose = [0, -0.6852, 0, 1.57, 0, 0.60, 0, 0]
 
-write_pose = [-1.56, -0.90, -1.79, -1.31, -1.50, 1.35, -0.25, 0.65]
+# write_pose = [-1.56, -0.90, -1.79, -1.31, -1.50, 1.35, -0.25, 0.65]
+write_pose = [-1.09, -1.26, 0.72, 1.37, 2.29, 0.88, -0.15, 3.05]
 
 class JointTrajectoryPublisher(Node):
 	
@@ -22,19 +25,31 @@ class JointTrajectoryPublisher(Node):
 		self.joy_sub = self.create_subscription(Joy, "joy", self.joy_callback, 10)
 
 		self.pose = "default"
-		self.last_button_state = [0,0]
+		self.last_button_state = [0,0, 0]
 		
 	def joy_callback(self, msg):
 		buttons = msg.buttons
 		
 		if buttons[0] and not buttons[0] == self.last_button_state[0]:
-			self.pose = "default"
+			if not self.pose == "default":
+				self.pose = "default"
+				self.timer_callback()
+				time.sleep(1.5)
+			self.pose = "down"
 			self.timer_callback()
 		elif buttons[1] and not buttons[1] == self.last_button_state[1]:
+			if not self.pose == "default":
+				self.pose = "default"
+				self.timer_callback()
+				time.sleep(1.5)
 			self.pose = "write"
+			self.timer_callback()
+		elif buttons[2] and not buttons[2] == self.last_button_state[2]:
+			self.pose = "default"
 			self.timer_callback()
 		self.last_button_state[0] = buttons[0]
 		self.last_button_state[1] = buttons[1]
+		self.last_button_state[2] = buttons[2]
 			
 	def timer_callback(self):
 
@@ -50,6 +65,9 @@ class JointTrajectoryPublisher(Node):
 		elif self.pose == "write":
 			temp_point.positions = write_pose
 			self.get_logger().info("Moving to drawing position")
+		elif self.pose == "down":
+			temp_point.positions = down_pose
+			self.get_logger().info("Moving to down position")
 		temp_point.time_from_start = Duration(sec=1, nanosec=0)
 		
 		joint_traj.points = [temp_point]
