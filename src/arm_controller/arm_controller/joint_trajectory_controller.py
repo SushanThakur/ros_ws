@@ -5,14 +5,11 @@ from builtin_interfaces.msg import Duration
 from sensor_msgs.msg import Joy
 import time
 
-
 FRAME_ID = "base_link"
 joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
 
 default_pose = [0, 1.0, 0, 1.57, 0, 0.60, 0, 0]
 down_pose = [0, -0.6852, 0, 1.57, 0, 0.60, 0, 0]
-
-# write_pose = [-1.56, -0.90, -1.79, -1.31, -1.50, 1.35, -0.25, 0.65]
 write_pose = [-1.09, -1.26, 0.72, 1.37, 2.29, 0.88, -0.15, 3.05]
 
 class JointTrajectoryPublisher(Node):
@@ -31,14 +28,14 @@ class JointTrajectoryPublisher(Node):
 		buttons = msg.buttons
 		
 		if buttons[0] and not buttons[0] == self.last_button_state[0]:
-			if not self.pose == "default":
+			if not self.pose == "default" and not self.pose=="down":
 				self.pose = "default"
 				self.timer_callback()
 				time.sleep(1.5)
 			self.pose = "down"
 			self.timer_callback()
 		elif buttons[1] and not buttons[1] == self.last_button_state[1]:
-			if not self.pose == "default":
+			if not self.pose == "default" and not self.pose == "write":
 				self.pose = "default"
 				self.timer_callback()
 				time.sleep(1.5)
