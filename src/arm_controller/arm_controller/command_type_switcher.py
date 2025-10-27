@@ -6,10 +6,17 @@ from moveit_msgs.srv import ServoCommandType
 from sensor_msgs.msg import Joy
 from rcl_interfaces.msg import SetParametersResult
 
+# =========================================================================
+# Config Const
+# =========================================================================
 JOINT_JOG = 0
 TWIST = 1
 
+# =========================================================================
+# ROS 2 Node
+# =========================================================================
 class CmdTypeSwitcher(Node):
+	
 	def __init__(self):
 		super().__init__('cmd_type_switcher')
 
@@ -49,6 +56,9 @@ class CmdTypeSwitcher(Node):
 		new_cmd = JOINT_JOG if cmd == TWIST else TWIST
 		self.set_parameters([Parameter('command_type', Parameter.Type.INTEGER, new_cmd)])
 
+# =========================================================================
+# Entry POint
+# =========================================================================
 
 def main():
 	try:

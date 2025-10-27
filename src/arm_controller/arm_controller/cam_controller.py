@@ -1,5 +1,6 @@
 #!/home/sushant/ros_ws/ignore/test_env/bin/python3
 
+import config
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image, Joy
@@ -13,9 +14,15 @@ from geometry_msgs.msg import TwistStamped
 from rcl_interfaces.msg import SetParametersResult
 from rclpy.parameter import Parameter
 
+# =========================================================================
+# Config Const
+# =========================================================================
+AUTO_RUN = False  # Set True if you want to run this program directly without using PS4 controller
+
 frame_id = "base_link"
 joints = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'tool_joint']
 gripper_joints = ['grip_left_joint', 'grip_right_joint']
+
 open_pos = [0.0, 0.0]
 close_pos = [-0.04, 0.04]
 
@@ -24,6 +31,10 @@ class Position:
         self.lx = lx
         self.ly = ly
 
+
+# =========================================================================
+# ROS 2 Node
+# =========================================================================
 class CamController(Node):
 
     def __init__(self):
@@ -41,8 +52,10 @@ class CamController(Node):
         self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_call, 10)	
         self.last_button_state = 0
 
-        self.declare_parameter("cam_controller_state", "idle")
-        # self.declare_parameter("cam_controller_state", "working")
+        if AUTO_RUN:
+            self.declare_parameter("cam_controller_state", "working")
+        else:
+            self.declare_parameter("cam_controller_state", "idle")
         self.add_on_set_parameters_callback(self.param_change_call)
 
         self.mpHands = mp.solutions.hands
@@ -55,6 +68,9 @@ class CamController(Node):
         toLow, toHigh = to_val[0], to_val[1]
         return float((value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow)
 
+	# =====================================================================
+	# read cam data -> change to publish the processed data
+	# =====================================================================
     def cam_call(self, msg):
         self.get_logger().debug('Receiving video frame')
 
@@ -120,14 +136,13 @@ class CamController(Node):
         ros_image = self.br.cv2_to_imgmsg(frame, "bgr8")
         self.cam_pub.publish(ros_image)
         self.get_logger().debug("Published Image")
-
-		# if you want to see the window pop up when in active mode uncomment these lines
         
-        # if self.get_parameter('cam_controller_state').value == "working":
-        #     cv.imshow("Hand Tracking", frame)
-        #     cv.waitKey(1)
-        # else:
-        #     cv.destroyAllWindows()
+        if AUTO_RUN:
+            if self.get_parameter('cam_controller_state').value == "working":
+                cv.imshow("Hand Tracking", frame)
+                cv.waitKey(1)
+            else:
+                cv.destroyAllWindows()
 
     def joy_call(self, msg):
         button = msg.buttons[3] 
@@ -182,12 +197,15 @@ class CamController(Node):
             self.get_logger().debug(f'x={type(joint_twist.twist.linear.x)} y={joint_twist.twist.linear.x:.2f}')
             
 def main():
+    
     try:
         rclpy.init()
         cam_controller = CamController()
         rclpy.spin(cam_controller)
+        
     except KeyboardInterrupt:
         pass
+    
     finally:
         if rclpy.ok():
             cam_controller.destroy_node()
