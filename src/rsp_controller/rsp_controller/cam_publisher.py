@@ -12,7 +12,7 @@ class CamPub(Node):
 		self.cam_pub = self.create_publisher(Image, 'cam_publisher', 10)
 		self.timer = self.create_timer(0.1, self.time_call)
 
-		self.cap = cv.VideoCapture(0)
+		self.cap = cv.VideoCapture(2)
 		self.bridge = CvBridge()
 
 

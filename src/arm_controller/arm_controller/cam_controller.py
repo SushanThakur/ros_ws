@@ -1,6 +1,5 @@
 #!/home/sushant/ros_ws/ignore/test_env/bin/python3
 
-import config
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image, Joy
