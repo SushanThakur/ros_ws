@@ -12,6 +12,7 @@ PEN_DOWN_Z = 0.07          # Z height when drawing
 PEN_UP_Z = 0.15            # Z height when moving
 ST_WIDTH = 1.0
 
+# Orientation of end effector in quaternion
 default_orient = [
     0.7068251814624406,
     0.7073873723632136,
