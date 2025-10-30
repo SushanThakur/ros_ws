@@ -20,6 +20,7 @@ default_orient = [
     0.0
 ]
 
+# File to store the positions for recording mode
 PATH = 'recording/pos.txt'
 
 default_pose = [0, 1.0, 0, 1.57, 0, 0.60, 0, 0]
