@@ -26,3 +26,7 @@ PATH = 'recording/pos.txt'
 default_pose = [0, 1.0, 0, 1.57, 0, 0.60, 0, 0]
 down_pose = [0, -0.6852, 0, 1.57, 0, 0.60, 0, 0]
 write_pose = [-1.09, -1.26, 0.72, 1.37, 2.29, 0.88, -0.15, 3.05]
+
+# Command Type
+JOINT = 0
+TWIST = 1
